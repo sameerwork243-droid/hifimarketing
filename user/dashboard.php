@@ -1,0 +1,563 @@
+<?php
+require_once '../includes/config.php';
+require_once '../includes/functions.php';
+requireLogin(); // User must be logged in
+
+// ===== GET USER ID =====
+$user_id = $_SESSION['user_id'];
+
+// ===== GET USER APPLICATIONS =====
+$query = "SELECT a.*, j.title as job_title, j.location, j.type, j.department 
+          FROM applications a 
+          LEFT JOIN jobs j ON a.job_id = j.id 
+          WHERE a.user_id = '$user_id' 
+          ORDER BY a.applied_at DESC";
+$result = mysqli_query($conn, $query);
+$applications = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+// ===== GET APPLICATION STATS =====
+$stats_query = "SELECT 
+                    COUNT(*) as total,
+                    SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending,
+                    SUM(CASE WHEN status = 'reviewed' THEN 1 ELSE 0 END) as reviewed,
+                    SUM(CASE WHEN status = 'shortlisted' THEN 1 ELSE 0 END) as shortlisted,
+                    SUM(CASE WHEN status = 'rejected' THEN 1 ELSE 0 END) as rejected
+                FROM applications 
+                WHERE user_id = '$user_id'";
+$stats_result = mysqli_query($conn, $stats_query);
+$stats = mysqli_fetch_assoc($stats_result);
+
+// ===== GET RECOMMENDED JOBS =====
+$recommended_query = "SELECT * FROM jobs WHERE is_active = 1 ORDER BY posted_date DESC LIMIT 5";
+$recommended_result = mysqli_query($conn, $recommended_query);
+$recommended_jobs = mysqli_fetch_all($recommended_result, MYSQLI_ASSOC);
+
+// ===== GET SUCCESS MESSAGE =====
+$success_msg = isset($_SESSION['application_success']) ? $_SESSION['application_success'] : '';
+unset($_SESSION['application_success']);
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Dashboard | HIFI Marketing & Technologies</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <style>
+        /* ===== DASHBOARD STYLES ===== */
+        :root {
+            --primary: #4a5cf5;
+            --primary-dark: #3a4be0;
+            --bg: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-primary: #1a1c26;
+            --text-secondary: #3d4452;
+            --text-muted: #8a94a0;
+            --border: #e9edf2;
+            --radius: 16px;
+            --shadow: 0 2px 12px rgba(0,0,0,0.04);
+            --shadow-hover: 0 8px 40px rgba(0,0,0,0.08);
+            --transition: 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        a { text-decoration: none; color: inherit; }
+
+        /* ===== HEADER ===== */
+        header {
+            background: rgba(255,255,255,0.98);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        .logo { font-size: 24px; font-weight: 900; color: var(--text-primary); flex-shrink: 0; }
+        .logo span { color: var(--primary); }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .header-right .nav-link {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-secondary);
+            transition: var(--transition);
+            padding: 6px 12px;
+            border-radius: 8px;
+        }
+        .header-right .nav-link:hover {
+            color: var(--primary);
+            background: #f0f3ff;
+        }
+        .header-right .nav-link.active {
+            color: var(--primary);
+            background: #f0f3ff;
+        }
+        .header-right .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 13px;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .header-right .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        .header-right .btn-logout {
+            background: transparent;
+            color: #dc3545;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 13px;
+            border: 1px solid #dc3545;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .header-right .btn-logout:hover {
+            background: #dc3545;
+            color: #fff;
+        }
+        .header-right .user-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+        .header-right .user-name i {
+            color: var(--primary);
+            margin-right: 6px;
+        }
+
+        /* ===== DASHBOARD ===== */
+        .dashboard {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 24px 60px;
+        }
+
+        /* ===== WELCOME ===== */
+        .welcome-section {
+            background: linear-gradient(135deg, #4a5cf5 0%, #6c7aff 100%);
+            border-radius: var(--radius);
+            padding: 32px 36px;
+            color: #fff;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .welcome-section h1 {
+            font-size: 28px;
+            font-weight: 800;
+        }
+        .welcome-section p {
+            opacity: 0.85;
+            font-size: 15px;
+            margin-top: 4px;
+        }
+        .welcome-section .badge {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        /* ===== SUCCESS MESSAGE ===== */
+        .success-msg {
+            background: #dcfce7;
+            color: #16a34a;
+            padding: 14px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid #16a34a;
+            font-weight: 600;
+        }
+
+        /* ===== STATS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            padding: 20px 24px;
+            transition: var(--transition);
+        }
+        .stat-card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+        .stat-card .number {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--text-primary);
+        }
+        .stat-card .label {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .stat-card .icon {
+            float: right;
+            font-size: 28px;
+            opacity: 0.2;
+            color: var(--primary);
+        }
+
+        /* ===== SECTION TITLE ===== */
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-title i {
+            color: var(--primary);
+        }
+
+        /* ===== APPLICATIONS TABLE ===== */
+        .table-wrap {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table th {
+            background: #f8fafc;
+            text-align: left;
+            padding: 14px 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+        }
+        table td {
+            padding: 14px 20px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            border-bottom: 1px solid #f0f2f5;
+        }
+        table tr:hover td { background: #f8fafc; }
+        table tr:last-child td { border-bottom: none; }
+
+        .status-badge {
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .status-badge.pending { background: #fff3e0; color: #e65100; }
+        .status-badge.reviewed { background: #e8edfe; color: var(--primary); }
+        .status-badge.shortlisted { background: #e8f5e9; color: #2e7d32; }
+        .status-badge.rejected { background: #fee2e2; color: #dc3545; }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+        .empty-state i {
+            font-size: 48px;
+            color: #d0d7e0;
+            margin-bottom: 12px;
+        }
+        .empty-state h3 {
+            font-size: 18px;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .empty-state .btn-primary {
+            display: inline-block;
+            margin-top: 16px;
+            background: var(--primary);
+            color: #fff;
+            padding: 10px 28px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .empty-state .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* ===== RECOMMENDED JOBS ===== */
+        .recommended-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+        .recommended-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            padding: 20px 24px;
+            transition: var(--transition);
+        }
+        .recommended-card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+            border-color: var(--primary);
+        }
+        .recommended-card h4 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .recommended-card .job-meta {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        .recommended-card .job-meta i {
+            color: var(--primary);
+            margin-right: 4px;
+        }
+        .recommended-card .btn-sm {
+            display: inline-block;
+            margin-top: 10px;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 13px;
+            transition: var(--transition);
+        }
+        .recommended-card .btn-sm:hover {
+            color: var(--primary-dark);
+        }
+
+        /* ===== DARK MODE ===== */
+        body.dark-mode {
+            --bg: #0b0d10;
+            --card-bg: #14191f;
+            --text-primary: #eaeef2;
+            --text-secondary: #b0b8c5;
+            --text-muted: #6b7a8a;
+            --border: #1e242c;
+            --shadow-hover: 0 8px 40px rgba(0,0,0,0.4);
+        }
+        body.dark-mode header {
+            background: rgba(11,13,16,0.98);
+            border-color: #1e242c;
+        }
+        body.dark-mode .logo { color: #eaeef2; }
+        body.dark-mode .header-right .nav-link { color: #b0b8c5; }
+        body.dark-mode .header-right .nav-link:hover { background: #14191f; color: #6c7aff; }
+        body.dark-mode .header-right .user-name { color: #eaeef2; }
+        body.dark-mode table th { background: #14191f; border-color: #1e242c; }
+        body.dark-mode table td { border-color: #1e242c; }
+        body.dark-mode table tr:hover td { background: #14191f; }
+        body.dark-mode .welcome-section {
+            background: linear-gradient(135deg, #3a4be0 0%, #5a68e0 100%);
+        }
+        body.dark-mode .recommended-card:hover { border-color: #6c7aff; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .welcome-section { padding: 24px; flex-direction: column; text-align: center; }
+            .welcome-section h1 { font-size: 22px; }
+            .table-wrap { overflow-x: auto; }
+            table { font-size: 13px; }
+            table th, table td { padding: 10px 12px; }
+            .header-right .btn-primary { display: none; }
+            .header-right .nav-link { font-size: 13px; padding: 4px 8px; }
+        }
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .welcome-section h1 { font-size: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header>
+        <div class="header-inner">
+            <div class="logo">HIFI <span>Marketing & Technologies</span></div>
+            <div class="header-right">
+                <a href="../index.php" class="nav-link"><i class="fas fa-home"></i> Home</a>
+                <a href="dashboard.php" class="nav-link active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                <a href="../job.php" class="nav-link"><i class="fas fa-search"></i> Find Jobs</a>
+                <span class="user-name"><i class="fas fa-user-circle"></i> <?php echo htmlspecialchars($_SESSION['username']); ?></span>
+                <?php if ($_SESSION['user_role'] === 'admin'): ?>
+                    <a href="../admin/dashboard.php" style="background:#6c7aff;color:#fff;padding:4px 14px;border-radius:40px;font-weight:600;font-size:12px;">Admin</a>
+                <?php endif; ?>
+                <a href="../logout.php" class="btn-logout"><i class="fas fa-sign-out-alt"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== DASHBOARD ===== -->
+    <div class="dashboard">
+
+        <!-- ===== WELCOME ===== -->
+        <div class="welcome-section">
+            <div>
+                <h1>👋 Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</h1>
+                <p>Track your job applications and discover new opportunities.</p>
+            </div>
+            <span class="badge"><i class="fas fa-calendar-alt"></i> Member since <?php echo date('M Y', strtotime($_SESSION['created_at'] ?? 'now')); ?></span>
+        </div>
+
+        <!-- ===== SUCCESS MESSAGE ===== -->
+        <?php if (!empty($success_msg)): ?>
+            <div class="success-msg"><i class="fas fa-check-circle"></i> <?php echo $success_msg; ?></div>
+        <?php endif; ?>
+
+        <!-- ===== STATS ===== -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="icon"><i class="fas fa-file-alt"></i></div>
+                <div class="number"><?php echo $stats['total'] ?? 0; ?></div>
+                <div class="label">Total Applications</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon"><i class="fas fa-clock"></i></div>
+                <div class="number"><?php echo $stats['pending'] ?? 0; ?></div>
+                <div class="label">Pending Review</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon"><i class="fas fa-check-circle"></i></div>
+                <div class="number"><?php echo $stats['shortlisted'] ?? 0; ?></div>
+                <div class="label">Shortlisted</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon"><i class="fas fa-times-circle"></i></div>
+                <div class="number"><?php echo $stats['rejected'] ?? 0; ?></div>
+                <div class="label">Rejected</div>
+            </div>
+        </div>
+
+        <!-- ===== MY APPLICATIONS ===== -->
+        <div class="section-title"><i class="fas fa-file-alt"></i> My Applications</div>
+
+        <div class="table-wrap">
+            <?php if (count($applications) > 0): ?>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Job Title</th>
+                            <th>Department</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Applied Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $i = 1; foreach ($applications as $app): ?>
+                        <tr>
+                            <td><?php echo $i++; ?></td>
+                            <td><strong><?php echo htmlspecialchars($app['job_title'] ?? 'N/A'); ?></strong></td>
+                            <td><?php echo htmlspecialchars($app['department'] ?? '-'); ?></td>
+                            <td><?php echo htmlspecialchars($app['location'] ?? '-'); ?></td>
+                            <td><span class="status-badge <?php echo $app['status']; ?>"><?php echo ucfirst($app['status']); ?></span></td>
+                            <td><?php echo date('d M Y', strtotime($app['applied_at'])); ?></td>
+                            <td>
+                                <?php if ($app['job_id']): ?>
+                                    <a href="../job-detail.php?id=<?php echo $app['job_id']; ?>" style="color:var(--primary);font-weight:600;font-size:13px;">View Job</a>
+                                <?php else: ?>
+                                    <span style="color:var(--text-muted);font-size:12px;">Job removed</span>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <h3>No applications yet</h3>
+                    <p>Start your career journey by applying for jobs that match your skills.</p>
+                    <a href="../job.php" class="btn-primary"><i class="fas fa-search"></i> Browse Jobs</a>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <!-- ===== RECOMMENDED JOBS ===== -->
+        <div class="section-title"><i class="fas fa-star"></i> Recommended Jobs for You</div>
+        <div class="recommended-grid">
+            <?php foreach ($recommended_jobs as $job): ?>
+                <div class="recommended-card">
+                    <h4><?php echo htmlspecialchars($job['title']); ?></h4>
+                    <div class="job-meta">
+                        <i class="fas fa-building"></i> <?php echo htmlspecialchars($job['department'] ?? 'General'); ?>
+                        <br />
+                        <i class="fas fa-map-marker-alt"></i> <?php echo htmlspecialchars($job['location']); ?>
+                        <br />
+                        <i class="fas fa-clock"></i> <?php echo $job['type']; ?>
+                    </div>
+                    <a href="../job-detail.php?id=<?php echo $job['id']; ?>" class="btn-sm">View Details →</a>
+                </div>
+            <?php endforeach; ?>
+        </div>
+
+    </div>
+
+    <!-- ===== THEME TOGGLE ===== -->
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+        });
+    </script>
+
+</body>
+</html>

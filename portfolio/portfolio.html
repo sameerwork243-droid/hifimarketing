@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>John Kendric - Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #0b0f1a;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .portfolio-card {
+            max-width: 1200px;
+            width: 100%;
+            background: #111827;
+            border-radius: 30px;
+            padding: 30px 40px 50px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+            border: 1px solid #1e293b;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #6c63ff, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            flex-wrap: wrap;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        .nav-links a.active {
+            color: #fff;
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #6c63ff;
+            border-radius: 10px;
+        }
+
+        /* Portfolio Page Specific */
+        .portfolio-section h2 {
+            font-size: 40px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .portfolio-section h2 span {
+            color: #6c63ff;
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .project-card {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid #1e293b;
+            transition: 0.3s;
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        .project-card.animate {
+            animation: popIn 0.6s ease forwards;
+        }
+
+        @keyframes popIn {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: #6c63ff;
+            box-shadow: 0 10px 30px rgba(108, 99, 255, 0.2);
+        }
+
+        .project-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .project-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(17, 24, 39, 0.9);
+            padding: 20px;
+            transform: translateY(100%);
+            transition: 0.4s ease;
+        }
+
+        .project-card:hover .project-overlay {
+            transform: translateY(0);
+        }
+
+        .project-overlay h3 {
+            font-size: 18px;
+            color: #fff;
+        }
+
+        .project-overlay p {
+            color: #94a3b8;
+            font-size: 14px;
+            margin: 5px 0 10px;
+        }
+
+        .project-overlay a {
+            color: #6c63ff;
+            font-size: 20px;
+            transition: 0.3s;
+            display: inline-block;
+        }
+
+        .project-overlay a:hover {
+            color: #a78bfa;
+            transform: scale(1.1);
+        }
+
+        /* Filter Buttons */
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: #1e293b;
+            color: #94a3b8;
+            border: 1px solid #334155;
+            padding: 10px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: linear-gradient(135deg, #6c63ff, #3b82f6);
+            color: #fff;
+            border-color: #6c63ff;
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .portfolio-card {
+                padding: 20px;
+            }
+            nav {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            .nav-links {
+                gap: 15px;
+            }
+            .portfolio-section h2 {
+                font-size: 32px;
+            }
+            .portfolio-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-links {
+                gap: 10px;
+                font-size: 14px;
+            }
+            .portfolio-grid {
+                grid-template-columns: 1fr;
+            }
+            .filter-buttons {
+                gap: 10px;
+            }
+            .filter-btn {
+                padding: 8px 18px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="portfolio-card">
+
+        <nav>
+            <div class="logo">Portfolio.</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="skills.html">Skills</a></li>
+                <li><a href="portfolio.html" class="active">Portfolio</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+
+        <section class="portfolio-section">
+            <h2>My <span>Projects</span></h2>
+
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="web">Web Apps</button>
+                <button class="filter-btn" data-filter="mobile">Mobile</button>
+                <button class="filter-btn" data-filter="design">Design</button>
+            </div>
+
+            <div class="portfolio-grid">
+                <div class="project-card" data-category="web">
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=250&fit=crop" alt="Project 1" />
+                    <div class="project-overlay">
+                        <h3>Web App</h3>
+                        <p>Lorem ipsum dolor sit amet.</p>
+                        <a href="#" onclick="openProject('Web App')"><i class="fas fa-link"></i></a>
+                    </div>
+                </div>
+
+                <div class="project-card" data-category="web">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=250&fit=crop" alt="Project 2" />
+                    <div class="project-overlay">
+                        <h3>Dashboard</h3>
+                        <p>Lorem ipsum dolor sit amet.</p>
+                        <a href="#" onclick="openProject('Dashboard')"><i class="fas fa-link"></i></a>
+                    </div>
+                </div>
+
+                <div class="project-card" data-category="web">
+                    <img src="https://images.unsplash.com/photo-1522542550221-31fd19575a2d?w=400&h=250&fit=crop" alt="Project 3" />
+                    <div class="project-overlay">
+                        <h3>E-Commerce</h3>
+                        <p>Lorem ipsum dolor sit amet.</p>
+                        <a href="#" onclick="openProject('E-Commerce')"><i class="fas fa-link"></i></a>
+                    </div>
+                </div>
+
+                <div class="project-card" data-category="mobile">
+                    <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?w=400&h=250&fit=crop" alt="Project 4" />
+                    <div class="project-overlay">
+                        <h3>Mobile App</h3>
+                        <p>Lorem ipsum dolor sit amet.</p>
+                        <a href="#" onclick="openProject('Mobile App')"><i class="fas fa-link"></i></a>
+                    </div>
+                </div>
+
+                <div class="project-card" data-category="design">
+                    <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=400&h=250&fit=crop" alt="Project 5" />
+                    <div class="project-overlay">
+                        <h3>Portfolio Design</h3>
+                        <p>Lorem ipsum dolor sit amet.</p>
+                        <a href="#" onclick="openProject('Portfolio Design')"><i class="fas fa-link"></i></a>
+                    </div>
+                </div>
+
+                <div class="project-card" data-category="mobile">
+                    <img src="https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?w=400&h=250&fit=crop" alt="Project 6" />
+                    <div class="project-overlay">
+                        <h3>Blog Site</h3>
+                        <p>Lorem ipsum dolor sit amet.</p>
+                        <a href="#" onclick="openProject('Blog Site')"><i class="fas fa-link"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Portfolio Page Loaded');
+
+            // Animate project cards
+            const cards = document.querySelectorAll('.project-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add('animate');
+                }, 150 * (index + 1));
+            });
+
+            // Filter functionality
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const projectCards = document.querySelectorAll('.project-card');
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+
+                    const filter = this.getAttribute('data-filter');
+
+                    projectCards.forEach((card, index) => {
+                        if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                            card.style.display = 'block';
+                            setTimeout(() => {
+                                card.classList.add('animate');
+                            }, 100 * (index + 1));
+                        } else {
+                            card.style.display = 'none';
+                            card.classList.remove('animate');
+                        }
+                    });
+                });
+            });
+        });
+
+        function openProject(projectName) {
+            alert('Opening project: ' + projectName);
+            // In real use: window.location.href = 'project-details.html';
+        }
+    </script>
+
+</body>
+</html>

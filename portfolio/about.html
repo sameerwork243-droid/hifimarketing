@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>John Kendric - About</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #0b0f1a;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .portfolio-card {
+            max-width: 1200px;
+            width: 100%;
+            background: #111827;
+            border-radius: 30px;
+            padding: 30px 40px 50px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+            border: 1px solid #1e293b;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #6c63ff, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            flex-wrap: wrap;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        .nav-links a.active {
+            color: #fff;
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #6c63ff;
+            border-radius: 10px;
+        }
+
+        .btn-cv {
+            display: inline-block;
+            background: linear-gradient(135deg, #6c63ff, #3b82f6);
+            color: #fff;
+            font-weight: 600;
+            padding: 14px 38px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-size: 16px;
+            transition: 0.3s;
+            box-shadow: 0 8px 20px rgba(108, 99, 255, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-cv:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(108, 99, 255, 0.5);
+        }
+
+        /* About Page Specific */
+        .about-section {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .about-img {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #6c63ff;
+            box-shadow: 0 0 60px rgba(108, 99, 255, 0.3);
+            transition: 0.4s ease;
+        }
+
+        .about-img:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 80px rgba(108, 99, 255, 0.5);
+        }
+
+        .about-text {
+            flex: 1;
+        }
+
+        .about-text h2 {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .about-text h2 span {
+            color: #6c63ff;
+        }
+
+        .about-text h3 {
+            font-size: 22px;
+            color: #94a3b8;
+            margin-bottom: 15px;
+        }
+
+        .about-text p {
+            color: #94a3b8;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .about-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .about-info div {
+            color: #94a3b8;
+            font-size: 15px;
+        }
+
+        .about-info i {
+            color: #6c63ff;
+            width: 25px;
+        }
+
+        @media (max-width: 768px) {
+            .portfolio-card {
+                padding: 20px;
+            }
+            nav {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            .nav-links {
+                gap: 15px;
+            }
+            .about-text h2 {
+                font-size: 32px;
+            }
+            .about-img {
+                width: 220px;
+                height: 220px;
+            }
+            .about-info {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-links {
+                gap: 10px;
+                font-size: 14px;
+            }
+            .about-img {
+                width: 180px;
+                height: 180px;
+            }
+            .btn-cv {
+                padding: 12px 28px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="portfolio-card">
+
+        <nav>
+            <div class="logo">Portfolio.</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html" class="active">About</a></li>
+                <li><a href="skills.html">Skills</a></li>
+                <li><a href="portfolio.html">Portfolio</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+
+        <section class="about-section">
+            <div class="about-image">
+                <img 
+                    src="jaweria.jpeg" 
+                    alt="About Me" 
+                    class="about-img"
+                />
+            </div>
+            <div class="about-text">
+                <h2>About <span>Me</span></h2>
+                <h3>Frontend Developer</h3>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. 
+                    Possimus nulla sed soepe rerum, animi expedita. 
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                </p>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. 
+                    Possimus nulla sed soepe rerum, animi expedita.
+                </p>
+                <div class="about-info">
+                    <div><i class="fas fa-user"></i> <strong>Name:</strong> John Kendric</div>
+                    <div><i class="fas fa-envelope"></i> <strong>Email:</strong> john@example.com</div>
+                    <div><i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> New York, USA</div>
+                    <div><i class="fas fa-calendar"></i> <strong>Experience:</strong> 5+ Years</div>
+                </div>
+                <a href="#" class="btn-cv" onclick="downloadCV()">
+                    <i class="fas fa-download"></i> Download CV
+                </a>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        function downloadCV() {
+            alert('Your CV is downloading...');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('About Page Loaded');
+            
+            // Animate about info items one by one
+            const infoItems = document.querySelectorAll('.about-info div');
+            infoItems.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateX(-20px)';
+                setTimeout(() => {
+                    item.style.transition = 'all 0.5s ease';
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateX(0)';
+                }, 200 * (index + 1));
+            });
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>John Kendric - Skills</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #0b0f1a;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .portfolio-card {
+            max-width: 1200px;
+            width: 100%;
+            background: #111827;
+            border-radius: 30px;
+            padding: 30px 40px 50px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+            border: 1px solid #1e293b;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #6c63ff, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            flex-wrap: wrap;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        .nav-links a.active {
+            color: #fff;
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #6c63ff;
+            border-radius: 10px;
+        }
+
+        /* Skills Page Specific */
+        .skills-section h2 {
+            font-size: 40px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .skills-section h2 span {
+            color: #6c63ff;
+        }
+
+        .skills-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .skill-item {
+            margin-bottom: 22px;
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+
+        .skill-item.animate {
+            animation: slideIn 0.6s ease forwards;
+        }
+
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .skill-info {
+            display: flex;
+            justify-content: space-between;
+            color: #e2e8f0;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        .skill-bar {
+            width: 100%;
+            height: 10px;
+            background: #1e293b;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .skill-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #6c63ff, #3b82f6);
+            border-radius: 10px;
+            width: 0;
+            transition: width 1.5s ease;
+        }
+
+        .skill-progress.animate {
+            /* Width is set inline, this class just triggers the transition */
+        }
+
+        @media (max-width: 768px) {
+            .portfolio-card {
+                padding: 20px;
+            }
+            nav {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            .nav-links {
+                gap: 15px;
+            }
+            .skills-section h2 {
+                font-size: 32px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-links {
+                gap: 10px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="portfolio-card">
+
+        <nav>
+            <div class="logo">Portfolio.</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="skills.html" class="active">Skills</a></li>
+                <li><a href="portfolio.html">Portfolio</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+
+        <section class="skills-section">
+            <h2>My <span>Skills</span></h2>
+
+            <div class="skills-container">
+                <div class="skill-item" data-delay="0">
+                    <div class="skill-info">
+                        <span>HTML5</span>
+                        <span>90%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-width="90"></div>
+                    </div>
+                </div>
+
+                <div class="skill-item" data-delay="200">
+                    <div class="skill-info">
+                        <span>CSS3</span>
+                        <span>85%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-width="85"></div>
+                    </div>
+                </div>
+
+                <div class="skill-item" data-delay="400">
+                    <div class="skill-info">
+                        <span>JavaScript</span>
+                        <span>75%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-width="75"></div>
+                    </div>
+                </div>
+
+                <div class="skill-item" data-delay="600">
+                    <div class="skill-info">
+                        <span>React.js</span>
+                        <span>70%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-width="70"></div>
+                    </div>
+                </div>
+
+                <div class="skill-item" data-delay="800">
+                    <div class="skill-info">
+                        <span>Bootstrap</span>
+                        <span>80%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-width="80"></div>
+                    </div>
+                </div>
+
+                <div class="skill-item" data-delay="1000">
+                    <div class="skill-info">
+                        <span>Git & GitHub</span>
+                        <span>65%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-width="65"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Skills Page Loaded');
+
+            const skillItems = document.querySelectorAll('.skill-item');
+            
+            // Animate skills with delay
+            skillItems.forEach((item, index) => {
+                setTimeout(() => {
+                    item.classList.add('animate');
+                    
+                    // Animate progress bar
+                    const progress = item.querySelector('.skill-progress');
+                    const width = progress.getAttribute('data-width');
+                    setTimeout(() => {
+                        progress.style.width = width + '%';
+                    }, 200);
+                }, parseInt(item.getAttribute('data-delay')));
+            });
+
+            // Add counter animation for percentages
+            const percentages = document.querySelectorAll('.skill-info span:last-child');
+            percentages.forEach((percent, index) => {
+                const target = parseInt(percent.textContent);
+                let current = 0;
+                const interval = setInterval(() => {
+                    if (current < target) {
+                        current++;
+                        percent.textContent = current + '%';
+                    } else {
+                        clearInterval(interval);
+                    }
+                }, 20 + (index * 10));
+            });
+        });
+    </script>
+
+</body>
+</html>

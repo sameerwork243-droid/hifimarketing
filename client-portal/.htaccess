@@ -1,0 +1,12 @@
+# client-portal/.htaccess
+Options -Indexes
+<Files "*.php">
+    Order Deny,Allow
+    Allow from all
+</Files>
+
+# Block direct access to config files
+<Files "config.php">
+    Order Allow,Deny
+    Deny from all
+</Files>

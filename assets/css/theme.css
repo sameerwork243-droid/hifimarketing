@@ -1,0 +1,173 @@
+/* ===== AUTO-GENERATED THEME CSS ===== */
+
+:root {
+    --dashboard-bg: #f8fafc;
+    --dashboard-card-bg: #ffffff;
+    --dashboard-card-border: #e2e8f0;
+    --dashboard-heading: #1e293b;
+    --dashboard-text: #475569;
+    --dashboard-metric-bg: #ffffff;
+    --dashboard-metric-text: #1e293b;
+    --dashboard-metric-icon: #4f46e5;
+    --dashboard-metric-value: #1e293b;
+    --dashboard-progress-bg: #e2e8f0;
+    --dashboard-progress-fill: #4f46e5;
+    --plan-bg: #ffffff;
+    --plan-card-bg: #ffffff;
+    --plan-card-border: #e2e8f0;
+    --plan-heading: #1e293b;
+    --plan-text: #475569;
+    --plan-price: #1e293b;
+    --plan-active-border: #4f46e5;
+    --plan-active-bg: #eef2ff;
+    --plan-button-bg: #4f46e5;
+    --plan-button-text: #ffffff;
+    --addons-bg: #ffffff;
+    --addons-card-bg: #ffffff;
+    --addons-card-border: #e2e8f0;
+    --addons-heading: #1e293b;
+    --addons-text: #475569;
+    --addons-price: #4f46e5;
+    --addons-button-bg: #4f46e5;
+    --addons-button-text: #ffffff;
+    --deliverables-bg: #ffffff;
+    --deliverables-card-bg: #ffffff;
+    --deliverables-card-border: #e2e8f0;
+    --deliverables-heading: #1e293b;
+    --deliverables-text: #475569;
+    --deliverables-status-todo: #f43f5e;
+    --deliverables-status-progress: #4f46e5;
+    --deliverables-status-done: #22c55e;
+    --tickets-bg: #ffffff;
+    --tickets-card-bg: #ffffff;
+    --tickets-card-border: #e2e8f0;
+    --tickets-heading: #1e293b;
+    --tickets-text: #475569;
+    --tickets-status-open: #ef4444;
+    --tickets-status-resolved: #22c55e;
+    --tickets-button-bg: #4f46e5;
+    --tickets-button-text: #ffffff;
+    --billing-bg: #ffffff;
+    --billing-table-header: #f1f5f9;
+    --billing-table-border: #e2e8f0;
+    --billing-heading: #1e293b;
+    --billing-text: #475569;
+    --billing-paid: #22c55e;
+    --billing-pending: #f59e0b;
+    --billing-button-bg: #4f46e5;
+    --billing-button-text: #ffffff;
+    --reports-bg: #ffffff;
+    --reports-card-bg: #ffffff;
+    --reports-card-border: #e2e8f0;
+    --reports-heading: #1e293b;
+    --reports-text: #475569;
+    --reports-button-bg: #4f46e5;
+    --reports-button-text: #ffffff;
+    --pm-operations-bg: #ffffff;
+    --pm-operations-card-bg: #ffffff;
+    --pm-operations-card-border: #e2e8f0;
+    --pm-operations-heading: #1e293b;
+    --pm-operations-text: #475569;
+    --pm-operations-status: #4f46e5;
+    --pm-operations-button-bg: #4f46e5;
+    --pm-operations-button-text: #ffffff;
+    --pm-deliverables-bg: #ffffff;
+    --pm-deliverables-card-bg: #ffffff;
+    --pm-deliverables-card-border: #e2e8f0;
+    --pm-deliverables-heading: #1e293b;
+    --pm-deliverables-text: #475569;
+    --pm-deliverables-status-todo: #94a3b8;
+    --pm-deliverables-status-progress: #f59e0b;
+    --pm-deliverables-status-done: #22c55e;
+    --pm-deliverables-button-bg: #4f46e5;
+    --pm-deliverables-button-text: #ffffff;
+    --pm-tickets-bg: #ffffff;
+    --pm-tickets-card-bg: #ffffff;
+    --pm-tickets-card-border: #e2e8f0;
+    --pm-tickets-heading: #1e293b;
+    --pm-tickets-text: #475569;
+    --pm-tickets-status-open: #ef4444;
+    --pm-tickets-status-resolved: #22c55e;
+    --pm-tickets-button-bg: #4f46e5;
+    --pm-tickets-button-text: #ffffff;
+    --pm-verbal-bg: #ffffff;
+    --pm-verbal-card-bg: #ffffff;
+    --pm-verbal-card-border: #e2e8f0;
+    --pm-verbal-heading: #1e293b;
+    --pm-verbal-text: #475569;
+    --pm-verbal-button-bg: #4f46e5;
+    --pm-verbal-button-text: #ffffff;
+    --pm-sync-bg: #ffffff;
+    --pm-sync-card-bg: #ffffff;
+    --pm-sync-card-border: #e2e8f0;
+    --pm-sync-heading: #1e293b;
+    --pm-sync-text: #475569;
+    --pm-sync-slider: #4f46e5;
+    --pm-sync-button-bg: #4f46e5;
+    --pm-sync-button-text: #ffffff;
+}
+
+/* Dashboard */
+.dashboard-bg { background: var(--dashboard-bg); }
+.dashboard-card { background: var(--dashboard-card-bg); border-color: var(--dashboard-card-border); }
+.dashboard-heading { color: var(--dashboard-heading); }
+.dashboard-text { color: var(--dashboard-text); }
+.dashboard-metric { background: var(--dashboard-metric-bg); }
+.dashboard-metric-text { color: var(--dashboard-metric-text); }
+.dashboard-metric-icon { color: var(--dashboard-metric-icon); }
+.dashboard-metric-value { color: var(--dashboard-metric-value); }
+.dashboard-progress-bg { background: var(--dashboard-progress-bg); }
+.dashboard-progress-fill { background: var(--dashboard-progress-fill); }
+
+/* Packages */
+.plan-bg { background: var(--plan-bg); }
+.plan-card { background: var(--plan-card-bg); border-color: var(--plan-card-border); }
+.plan-heading { color: var(--plan-heading); }
+.plan-text { color: var(--plan-text); }
+.plan-price { color: var(--plan-price); }
+.plan-active { border-color: var(--plan-active-border); background: var(--plan-active-bg); }
+.plan-button { background: var(--plan-button-bg); color: var(--plan-button-text); }
+
+/* Addons */
+.addons-bg { background: var(--addons-bg); }
+.addons-card { background: var(--addons-card-bg); border-color: var(--addons-card-border); }
+.addons-heading { color: var(--addons-heading); }
+.addons-text { color: var(--addons-text); }
+.addons-price { color: var(--addons-price); }
+.addons-button { background: var(--addons-button-bg); color: var(--addons-button-text); }
+
+/* Deliverables */
+.deliverables-bg { background: var(--deliverables-bg); }
+.deliverables-card { background: var(--deliverables-card-bg); border-color: var(--deliverables-card-border); }
+.deliverables-heading { color: var(--deliverables-heading); }
+.deliverables-text { color: var(--deliverables-text); }
+.deliverables-status-todo { background: var(--deliverables-status-todo); }
+.deliverables-status-progress { background: var(--deliverables-status-progress); }
+.deliverables-status-done { background: var(--deliverables-status-done); }
+
+/* Tickets */
+.tickets-bg { background: var(--tickets-bg); }
+.tickets-card { background: var(--tickets-card-bg); border-color: var(--tickets-card-border); }
+.tickets-heading { color: var(--tickets-heading); }
+.tickets-text { color: var(--tickets-text); }
+.tickets-status-open { color: var(--tickets-status-open); }
+.tickets-status-resolved { color: var(--tickets-status-resolved); }
+.tickets-button { background: var(--tickets-button-bg); color: var(--tickets-button-text); }
+
+/* Billing */
+.billing-bg { background: var(--billing-bg); }
+.billing-table-header { background: var(--billing-table-header); }
+.billing-table-border { border-color: var(--billing-table-border); }
+.billing-heading { color: var(--billing-heading); }
+.billing-text { color: var(--billing-text); }
+.billing-paid { color: var(--billing-paid); }
+.billing-pending { color: var(--billing-pending); }
+.billing-button { background: var(--billing-button-bg); color: var(--billing-button-text); }
+
+/* Reports */
+.reports-bg { background: var(--reports-bg); }
+.reports-card { background: var(--reports-card-bg); border-color: var(--reports-card-border); }
+.reports-heading { color: var(--reports-heading); }
+.reports-text { color: var(--reports-text); }
+.reports-button { background: var(--reports-button-bg); color: var(--reports-button-text); }
+

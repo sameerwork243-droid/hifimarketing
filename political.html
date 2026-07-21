@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ahmed Saghir – Farzand-e-Poonch</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --pti-dark-green: #00401A;
+      --pti-green-2: #002b14;
+      --pti-red: #E70A0A;
+      --pti-red-dark: #b70808;
+      --white: #ffffff;
+      --off-white: #f5f8f6;
+      --text-dark: #101a13;
+      --text-light: #4a544c;
+      --shadow: 0 8px 24px rgba(0,0,0,0.10);
+      --transition: 0.25s ease;
+      --display: 'Archivo Black', 'Segoe UI', sans-serif;
+      --body: 'Inter', 'Segoe UI', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--body);
+      background: var(--off-white);
+      color: var(--text-dark);
+      line-height: 1.6;
+      overflow-x: hidden;
+      width: 100%;
+    }
+
+    img { max-width: 100%; display: block; }
+
+    .container {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 0 24px;
+      width: 100%;
+    }
+
+    h1, h2, h3, h4 { font-family: var(--display); font-weight: 400; letter-spacing: 0.3px; text-transform: uppercase; }
+
+    a { color: inherit; }
+
+    /* ============ TOP BAR ============ */
+    .topbar {
+      background: var(--pti-red);
+      color: var(--white);
+    }
+    .topbar .container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px 24px;
+      font-family: var(--display);
+      font-size: 0.8rem;
+      letter-spacing: 1.5px;
+      text-align: center;
+    }
+    .topbar a { text-decoration: none; color: var(--white); display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; text-align: center; line-height: 1.5; }
+    .topbar i { font-size: 0.75rem; flex-shrink: 0; }
+
+    /* ============ NAVBAR ============ */
+    .navbar {
+      background: var(--pti-dark-green);
+      padding: 16px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    }
+    .navbar .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .logo {
+      font-family: var(--display);
+      color: var(--white);
+      font-size: 1.4rem;
+      line-height: 1.05;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+    .logo .accent { color: var(--pti-red); }
+    .logo .tagline {
+      display: block;
+      font-family: var(--body);
+      font-size: 0.62rem;
+      letter-spacing: 2px;
+      font-weight: 600;
+      color: #c9d6cc;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 26px;
+      list-style: none;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .nav-links a {
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.92rem;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+    .nav-links a:hover { color: #f0c0c0; }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      flex-shrink: 0;
+    }
+    .social-inline { display: flex; gap: 16px; font-size: 1rem; align-items: center; }
+    .social-inline a { color: var(--white); transition: var(--transition); display: flex; align-items: center; }
+    .social-inline a:hover { color: var(--pti-red); }
+
+    .btn-primary {
+      background: var(--pti-red);
+      color: var(--white);
+      padding: 12px 30px;
+      border: none;
+      border-radius: 4px;
+      font-family: var(--display);
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+      display: inline-block;
+      text-transform: uppercase;
+      white-space: nowrap;
+      text-align: center;
+    }
+    .btn-primary:hover { background: var(--pti-red-dark); }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--white);
+      color: var(--white);
+      padding: 10px 28px;
+      border-radius: 4px;
+      font-family: var(--display);
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      transition: var(--transition);
+      text-decoration: none;
+      display: inline-block;
+      text-transform: uppercase;
+      text-align: center;
+    }
+    .btn-outline:hover { background: var(--white); color: var(--pti-dark-green); }
+
+    /* ============ HERO ============ */
+    .hero {
+      position: relative;
+      background: var(--pti-dark-green);
+      color: var(--white);
+      padding: 80px 0 60px;
+      overflow: hidden;
+      min-height: 640px;
+      display: flex;
+      align-items: center;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      background: var(--pti-dark-green);
+      right: 0;
+    }
+    .hero-bg-blur {
+      position: absolute;
+      inset: -5%;
+      width: 110%;
+      height: 110%;
+      object-fit: cover;
+      object-position: 50% 20%;
+      filter: blur(50px) saturate(1.3) brightness(0.5);
+      transform: scale(1.15);
+      opacity: 0.9;
+    }
+    .hero-bg-glow {
+      position: absolute;
+      right: -5%;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 62%;
+      height: 90%;
+      background: radial-gradient(ellipse 60% 65% at 65% 45%, rgba(127,184,148,0.45), rgba(127,184,148,0) 72%);
+      filter: blur(4px);
+      pointer-events: none;
+    }
+    .hero-bg-photo {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      height: 96%;
+      width: 56%;
+      object-fit: contain;
+      object-position: center bottom;
+      filter: drop-shadow(0 24px 46px rgba(0,0,0,0.45));
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 14%, black 100%);
+      mask-image: linear-gradient(to right, transparent 0%, black 14%, black 100%);
+    }
+    .hero-bg img {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      height: 100%;
+      width: auto;
+      max-width: 58%;
+      object-fit: cover;
+      object-position: right center;
+      filter: drop-shadow(0 24px 46px rgba(0,0,0,0.45));
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 20%, black 100%);
+      mask-image: linear-gradient(to right, transparent 0%, black 20%, black 100%);
+    }
+    .hero-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, var(--pti-dark-green) 0%, var(--pti-dark-green) 26%, rgba(0,64,26,0.6) 44%, rgba(0,64,26,0.05) 68%);
+      z-index: 1;
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,43,20,0.1) 0%, rgba(0,43,20,0.5) 100%);
+      z-index: 1;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 680px;
+      width: 100%;
+      text-align: left;
+      margin-left: 0;
+    }
+    .hero h1 {
+      font-size: 4rem;
+      line-height: 1.15;
+      margin-bottom: 22px;
+      text-align: left;
+    }
+    .hero h1 .hi-box {
+      background: var(--pti-red);
+      padding: 3px 14px;
+      display: inline-block;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+      line-height: 1.4;
+    }
+    .hero p {
+      font-family: var(--body);
+      font-size: 1.15rem;
+      opacity: 0.92;
+      margin-bottom: 34px;
+      max-width: 520px;
+      text-transform: none;
+      font-weight: 400;
+      text-align: left;
+    }
+    .hero-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 12px;
+      max-width: 720px;
+      width: 100%;
+    }
+    .hero-form input {
+      padding: 15px 18px;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      font-family: var(--body);
+      background: rgba(255,255,255,0.95);
+      width: 100%;
+      min-width: 0;
+    }
+    .hero-form button {
+      background: var(--pti-red);
+      color: var(--white);
+      border: none;
+      border-radius: 4px;
+      font-family: var(--display);
+      letter-spacing: 1px;
+      font-size: 0.9rem;
+      padding: 0 26px;
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+    .hero-form button:hover { background: var(--pti-red-dark); }
+    .hero-note {
+      font-family: var(--body);
+      font-size: 0.78rem;
+      opacity: 0.7;
+      margin-top: 14px;
+      max-width: 600px;
+      text-transform: none;
+      line-height: 1.5;
+      text-align: left;
+    }
+    .hero-note a { color: #d9e6dc; text-decoration: underline; }
+
+    /* ============ ABOUT / WELCOME ============ */
+    .about-intro {
+      background: var(--pti-dark-green);
+      color: var(--white);
+      padding: 90px 0;
+    }
+    .about-intro-inner {
+      max-width: 820px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .eyebrow {
+      font-family: var(--display);
+      font-size: 0.85rem;
+      letter-spacing: 4px;
+      color: #7fb894;
+      margin-bottom: 16px;
+    }
+    .about-intro h2 {
+      font-size: 2.8rem;
+      margin-bottom: 22px;
+      line-height: 1.2;
+    }
+    .about-intro p {
+      font-family: var(--body);
+      font-size: 1.1rem;
+      opacity: 0.92;
+      text-transform: none;
+      font-weight: 400;
+      margin-bottom: 34px;
+      text-align: center;
+    }
+    .about-intro .btn-row {
+      display: flex;
+      gap: 18px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ============ PRIORITIES ============ */
+    .priorities {
+      background: var(--pti-green-2);
+      color: var(--white);
+      padding: 90px 0 130px;
+      overflow: hidden;
+    }
+    .priorities-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .priorities-left .eyebrow { color: #7fb894; }
+    .priorities h2 {
+      font-size: 2.6rem;
+      line-height: 1.25;
+      margin-bottom: 20px;
+    }
+    .priorities-left p {
+      font-family: var(--body);
+      font-size: 1.05rem;
+      opacity: 0.9;
+      text-transform: none;
+      font-weight: 400;
+      margin-bottom: 30px;
+      max-width: 460px;
+    }
+    .priority-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 24px;
+    }
+    .priority-item {
+      background: rgba(255,255,255,0.06);
+      border-left: 3px solid var(--pti-red);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    .priority-item:hover { background: rgba(255,255,255,0.12); }
+    .priority-item span {
+      font-family: var(--display);
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
+      line-height: 1.4;
+    }
+    .priority-item i {
+      color: var(--pti-red);
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .view-all {
+      font-family: var(--display);
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      text-decoration: none;
+      color: var(--white);
+      border-bottom: 2px solid var(--pti-red);
+      padding-bottom: 4px;
+      display: inline-block;
+    }
+    .priorities-image {
+      position: relative;
+      min-height: 420px;
+    }
+    .priorities-image .img-main {
+      width: 100%;
+      height: 420px;
+      object-fit: cover;
+      object-position: 50% 20%;
+      border-radius: 4px;
+    }
+    .priorities-image .img-float {
+      position: absolute;
+      width: 42%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      bottom: -36px;
+      right: -20px;
+      border: 6px solid var(--pti-green-2);
+      border-radius: 4px;
+      box-shadow: 0 16px 32px rgba(0,0,0,0.35);
+    }
+
+    /* ============ SKILL DEVELOPMENT ============ */
+    .skills-section {
+      background: var(--pti-dark-green);
+      color: var(--white);
+      padding: 60px 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .skills-section h2 {
+      font-size: 2.2rem;
+      margin-bottom: 26px;
+      line-height: 1.25;
+    }
+    .skills-list {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .skills-list button {
+      background: var(--pti-green-2);
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 16px 28px;
+      border-radius: 4px;
+      font-family: var(--display);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+      min-width: 90px;
+    }
+    .skills-list button:hover { background: rgba(255,255,255,0.1); }
+    .skills-list button.other {
+      background: var(--pti-red);
+      border: none;
+      font-family: var(--body);
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+    .skills-list button.other:hover { background: var(--pti-red-dark); }
+    .skills-section .fineprint {
+      font-family: var(--body);
+      font-size: 0.85rem;
+      opacity: 0.75;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-transform: none;
+      text-align: center;
+      flex-wrap: wrap;
+    }
+
+    /* ============ NEWS / PRESS ============ */
+    .news {
+      background: var(--off-white);
+      padding: 90px 0;
+    }
+    .news-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 44px;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .news-head .eyebrow { color: var(--pti-red); }
+    .news-head h2 {
+      font-size: 2.4rem;
+      color: var(--pti-dark-green);
+      line-height: 1.2;
+    }
+    .btn-line {
+      border: 2px solid var(--pti-dark-green);
+      color: var(--pti-dark-green);
+      padding: 12px 26px;
+      border-radius: 4px;
+      font-family: var(--display);
+      font-size: 0.82rem;
+      letter-spacing: 1px;
+      text-decoration: none;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+    .btn-line:hover { background: var(--pti-dark-green); color: var(--white); }
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 26px;
+    }
+    .news-card {
+      background: var(--white);
+      padding: 30px 28px 26px;
+      border-radius: 6px;
+      box-shadow: var(--shadow);
+      border-bottom: 4px solid var(--pti-dark-green);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+    .news-card:hover { transform: translateY(-4px); border-bottom-color: var(--pti-red); }
+    .news-card i.flag {
+      color: var(--pti-dark-green);
+      font-size: 1.6rem;
+      margin-bottom: 22px;
+      display: block;
+    }
+    .news-card .tag {
+      font-family: var(--display);
+      font-size: 0.72rem;
+      letter-spacing: 1.5px;
+      color: var(--pti-red);
+      margin-bottom: 10px;
+    }
+    .news-card h4 {
+      font-family: var(--body);
+      font-weight: 700;
+      font-size: 1.1rem;
+      text-transform: none;
+      line-height: 1.4;
+      margin-bottom: 20px;
+      color: var(--text-dark);
+      flex-grow: 1;
+    }
+    .news-card .date {
+      font-family: var(--display);
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      color: var(--text-light);
+      padding-top: 14px;
+      border-top: 1px solid #e5e5e5;
+    }
+    .news-social {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      margin-top: 50px;
+    }
+    .news-social a {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #e7f0ea;
+      color: var(--pti-dark-green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    .news-social a:hover { background: var(--pti-dark-green); color: var(--white); }
+
+    /* ============ FOOTER CTA SPLIT ============ */
+    .footer-cta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .footer-cta .photo {
+      height: 620px;
+      overflow: hidden;
+    }
+    .footer-cta .photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 50% 15%;
+    }
+    .footer-cta .panel {
+      background: var(--pti-green-2);
+      color: var(--white);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 60px;
+    }
+    .footer-cta h2 {
+      font-size: 2.4rem;
+      line-height: 1.25;
+      margin-bottom: 28px;
+    }
+    .join-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 460px;
+      width: 100%;
+    }
+    .join-form .row2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .join-form input {
+      padding: 15px 18px;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      font-family: var(--body);
+      background: rgba(255,255,255,0.95);
+      width: 100%;
+      min-width: 0;
+    }
+    .join-form button {
+      background: var(--pti-red);
+      color: var(--white);
+      border: none;
+      border-radius: 4px;
+      font-family: var(--display);
+      letter-spacing: 1px;
+      font-size: 0.9rem;
+      padding: 16px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .join-form button:hover { background: var(--pti-red-dark); }
+    .footer-cta .note {
+      font-family: var(--body);
+      font-size: 0.78rem;
+      opacity: 0.7;
+      margin-top: 14px;
+      max-width: 460px;
+      text-transform: none;
+      line-height: 1.5;
+    }
+    .footer-cta .note a { color: #d9e6dc; text-decoration: underline; }
+
+    .split-btns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .split-btns a {
+      text-align: center;
+      padding: 20px;
+      text-decoration: none;
+      font-family: var(--display);
+      letter-spacing: 1px;
+      font-size: 0.95rem;
+    }
+    .split-btns .d { background: var(--pti-red); color: var(--white); }
+    .split-btns .d:hover { background: var(--pti-red-dark); }
+    .split-btns .v { background: var(--pti-dark-green); color: var(--white); }
+    .split-btns .v:hover { background: #003316; }
+
+    /* ============ FOOTER ============ */
+    .footer {
+      background: var(--white);
+      padding: 50px 0 30px;
+      text-align: center;
+    }
+    .footer .flogo {
+      font-family: var(--display);
+      font-size: 1.6rem;
+      color: var(--pti-dark-green);
+      margin-bottom: 6px;
+    }
+    .footer .flogo .accent { color: var(--pti-red); }
+    .footer .flogo .tagline {
+      display: block;
+      font-family: var(--body);
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      font-weight: 700;
+      color: var(--text-light);
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+    .footer-nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 22px;
+      margin: 26px 0 20px;
+      list-style: none;
+      font-family: var(--display);
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+    }
+    .footer-nav a { text-decoration: none; color: var(--pti-dark-green); }
+    .footer-nav a:hover { color: var(--pti-red); }
+    .footer address {
+      font-style: normal;
+      font-family: var(--body);
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-bottom: 6px;
+    }
+    .footer .contact-line a { color: var(--pti-dark-green); text-decoration: none; }
+    .footer .contact-line { word-break: break-word; }
+    .footer .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      font-size: 1.3rem;
+      margin-top: 22px;
+    }
+    .footer .social-icons a { color: var(--pti-dark-green); transition: var(--transition); }
+    .footer .social-icons a:hover { color: var(--pti-red); }
+
+    /* ============ RESPONSIVE ============ */
+
+    /* Tablet */
+    @media (max-width: 992px) {
+      .hero { min-height: unset; padding: 60px 0 50px; }
+      .hero-bg img { width: 100%; opacity: 0.25; object-position: 50% 12%; }
+      .hero-bg::before { background: linear-gradient(180deg, var(--pti-dark-green) 0%, rgba(0,64,26,0.85) 100%); }
+      .hero-content { max-width: 100%; text-align: center; }
+      .hero h1 { font-size: 2.8rem; text-align: center; }
+      .hero p { text-align: center; max-width: 100%; }
+      .hero-form { grid-template-columns: 1fr 1fr; }
+      .hero-form button { grid-column: 1 / -1; padding: 15px; }
+      .hero-note { text-align: center; max-width: 100%; }
+
+      .priorities { padding: 70px 0 100px; }
+      .priorities-grid { grid-template-columns: 1fr; gap: 40px; }
+      .priorities-image { margin-top: 10px; }
+      .priorities-image .img-main { height: 340px; }
+
+      .news-grid { grid-template-columns: 1fr 1fr; }
+
+      .footer-cta { grid-template-columns: 1fr; }
+      .footer-cta .photo { height: 360px; }
+      .footer-cta .panel { padding: 50px 40px; }
+
+      .nav-links { order: 3; width: 100%; justify-content: center; margin-top: 8px; }
+      .navbar .container { flex-direction: row; }
+      .about-intro p { text-align: center; }
+      
+      .hero-bg {
+        position: absolute;
+        inset: 0;
+        height: 100%;
+      }
+      .hero-bg img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        -webkit-mask-image: none;
+        mask-image: none;
+        filter: none;
+        opacity: 0.95;
+        object-fit: cover;
+        object-position: center 20%;
+      }
+    }
+
+    /* Mobile */
+    @media (max-width: 600px) {
+      .container { padding: 0 18px; }
+
+      .topbar .container { padding: 10px 18px; }
+      .topbar a { font-size: 0.72rem; letter-spacing: 1px; }
+
+      .navbar { padding: 14px 0; }
+      .navbar .container { flex-direction: column; align-items: center; gap: 14px; }
+      .logo { text-align: center; }
+      .nav-right { flex-direction: column; gap: 14px; }
+      .nav-links { gap: 16px 20px; margin-top: 0; }
+      .nav-links a { font-size: 0.85rem; }
+
+      .hero { padding: 44px 0 40px; }
+      .hero h1 { font-size: 2.1rem; line-height: 1.2; text-align: center; }
+      .hero p { font-size: 1rem; max-width: 100%; text-align: center; }
+      .hero-form { grid-template-columns: 1fr; }
+
+      .about-intro, .priorities, .news { padding: 55px 0; }
+      .priorities { padding-bottom: 90px; }
+      .about-intro h2, .priorities h2 { font-size: 1.9rem; }
+      .about-intro p { font-size: 1rem; }
+
+      .priorities-image .img-main { height: 260px; }
+      .priorities-image .img-float { width: 55%; right: 0; bottom: -28px; border-width: 4px; }
+
+      .skills-section h2 { font-size: 1.6rem; }
+      .skills-list button { padding: 13px 18px; min-width: 76px; font-size: 0.85rem; }
+
+      .news-head h2 { font-size: 1.9rem; }
+      .news-grid { grid-template-columns: 1fr; }
+
+      .footer-cta h2 { font-size: 1.9rem; }
+      .footer-cta .photo { height: 280px; }
+      .footer-cta .panel { padding: 40px 22px; }
+      .join-form .row2 { grid-template-columns: 1fr; }
+
+      .split-btns a { font-size: 0.82rem; padding: 16px; }
+
+      .footer { padding: 40px 0 24px; }
+      .footer-nav { gap: 14px 18px; }
+      
+      .hero-bg img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        -webkit-mask-image: none;
+        mask-image: none;
+        filter: none;
+        opacity: 0.9;
+        object-fit: cover;
+        object-position: center 10%;
+      }
+    }
+
+    /* Small phones */
+    @media (max-width: 380px) {
+      .hero h1 { font-size: 1.8rem; }
+      .priorities-image .img-float { width: 60%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="container">
+      <a href="#skills">JOIN THE SKILL DEVELOPMENT PROGRAM FOR THE YOUTH OF POONCH <i class="fas fa-chevron-right"></i></a>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="logo">
+        Ahmed <span class="accent">Saghir</span>  
+        <span class="tagline">Pakistan Peoples Party</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#priorities">Manifesto</a></li>
+        <li><a href="#news">News</a></li>
+        <li><a href="#media">Media</a></li>
+        <li><a href="#join">Take Action</a></li>
+      </ul>
+      <div class="nav-right">
+        <div class="social-inline">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-x-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-youtube"></i></a>
+          <a href="#"><i class="fab fa-tiktok"></i></a>
+        </div>
+        <a href="#skills" class="btn-primary">Skill Development</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-bg">
+      <img src="1.jpeg" alt="Ahmed Saghir" draggable="false" onerror="this.src='https://placehold.co/900x1000/00401A/002b14?text=+'">
+    </div>
+    <div class="container hero-content">
+      <h1>The Future of Poonch is <span class="hi-box">Ours to Build</span></h1>
+      <p>Driven by public service, youth empowerment, and an unwavering commitment to a prosperous, dignified Poonch.</p>
+      <form class="hero-form" onsubmit="return false;">
+        <input type="text" placeholder="Full Name">
+        <input type="text" placeholder="WhatsApp Number">
+        <input type="text" placeholder="Tehsil / UC">
+        <button type="submit">Join</button>
+      </form>
+      <p class="hero-note">By submitting your number you agree to receive periodic messages from Ahmed Saghir`s campaign. Message and data rates may apply. Text STOP to opt out.</p>
+    </div>
+  </section>
+
+  <!-- About / Welcome -->
+  <section class="about-intro" id="about">
+    <div class="container about-intro-inner">
+      <div class="eyebrow">SERVANT. VOICE. LEADER.</div>
+      <h2>Meet Ahmed Saghir</h2>
+      <p>Born and raised in the heart of Poonch, Ahmed Saghir is an emerging youth leader within the Pakistan Peoples Party, championing democratic values and social justice. His mission transcends winning elections — it is about securing employment for the youth, dignity for every household, and steering Poonch toward a modern era of development.</p>
+      <div class="btn-row">
+        <a href="#priorities" class="btn-primary">Read Manifesto</a>
+        <a href="#join" class="btn-outline">Volunteer</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Priorities / Manifesto -->
+  <section class="priorities" id="priorities">
+    <div class="container priorities-grid">
+      <div class="priorities-left">
+        <div class="eyebrow">MANIFESTO</div>
+        <h2>A Fighter for Everyday People of Poonch</h2>
+        <p>Ahmed Saghir is bridging the gap between governance and the public, bringing the core grievances of the region straight to the federal corridors of power.</p>
+        <div class="priority-list">
+          <div class="priority-item"><span>Digital Literacy &amp; Youth Employment</span><i class="fas fa-arrow-right"></i></div>
+          <div class="priority-item"><span>Premium Healthcare &amp; Modern Education</span><i class="fas fa-arrow-right"></i></div>
+          <div class="priority-item"><span>Infrastructure &amp; Sustainable Tourism</span><i class="fas fa-arrow-right"></i></div>
+          <div class="priority-item"><span>Social Safety &amp; Economic Relief</span><i class="fas fa-arrow-right"></i></div>
+        </div>
+        <a href="#" class="view-all">VIEW FULL MANIFESTO</a>
+      </div>
+      <div class="priorities-image">
+        <img class="img-main" src="2.jpeg" alt="Ahmed Saghir with leadership" draggable="false" onerror="this.src='https://placehold.co/700x500/00401A/E70A0A?text=Image+not+found'">
+        <img class="img-float" src="3.jpeg" alt="Community engagement" draggable="false" onerror="this.src='https://placehold.co/400x400/002b14/FFFFFF?text=+'">
+      </div>
+    </div>
+  </section>
+
+  <!-- Skill Development -->
+  <section class="skills-section" id="skills">
+    <div class="container">
+      <h2>Skill Development Programs for Poonch Youth</h2>
+      <div class="skills-list">
+        <button>IT &amp; Coding</button>
+        <button>Freelancing</button>
+        <button>Vocational Trades</button>
+        <button>Tourism &amp; Hospitality</button>
+        <button>Handicrafts</button>
+        <button class="other">Register Now</button>
+      </div>
+      <p class="fineprint"><i class="fas fa-circle-info"></i> Empowering the youth of Poonch with skills for a self-reliant future.</p>
+    </div>
+  </section>
+
+  <!-- News / Press -->
+  <section class="news" id="news">
+    <div class="container">
+      <div class="news-head">
+        <div>
+          <div class="eyebrow">THE LATEST</div>
+          <h2>News &amp; Updates</h2>
+        </div>
+        <a href="#" class="btn-line">View All News <i class="fas fa-chevron-right"></i></a>
+      </div>
+      <div class="news-grid">
+        <div class="news-card">
+          <i class="fas fa-flag flag"></i>
+          <div class="tag">PRESS RELEASE</div>
+          <h4>Poonch Youth Council Endorses Ahmed Saghir`s Digital Literacy Plan</h4>
+          <div class="date">JUL 08, 2026</div>
+        </div>
+        <div class="news-card">
+          <i class="fas fa-flag flag"></i>
+          <div class="tag">PRESS RELEASE</div>
+          <h4>Pakistan Peoples Party Poonch Chapter Rallies Behind Ahmed Saghir Ahead of By-Election</h4>
+          <div class="date">JUL 02, 2026</div>
+        </div>
+        <div class="news-card">
+          <i class="fas fa-flag flag"></i>
+          <div class="tag">STATEMENT</div>
+          <h4>Ahmed Saghir Vows Complete Road Network Rehabilitation for Poonch</h4>
+          <div class="date">JUN 27, 2026</div>
+        </div>
+      </div>
+      <div class="news-social">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-x-twitter"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+        <a href="#"><i class="fab fa-tiktok"></i></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer CTA split -->
+  <section id="join">
+    <div class="footer-cta">
+      <div class="photo">
+        <img src="4.jpg" alt="Ahmed Saghir" draggable="false" onerror="this.src='https://placehold.co/900x1000/00401A/002b14?text=+'">
+      </div>
+      <div class="panel">
+        <h2>Stand With Team Saghir</h2>
+        <form class="join-form" onsubmit="return false;">
+          <div class="row2">
+            <input type="text" placeholder="Full Name">
+            <input type="text" placeholder="Tehsil / UC">
+          </div>
+          <input type="text" placeholder="WhatsApp / Contact Number">
+          <button type="submit">Get Updates</button>
+        </form>
+        <p class="note">By submitting your number you agree to receive periodic messages from Ahmed Saghir`s campaign. Message and data rates may apply. Text STOP to opt out.</p>
+      </div>
+    </div>
+    <div class="split-btns">
+      <a href="#skills" class="d">Skill Development</a>
+      <a href="#join" class="v">Volunteer</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="flogo">
+        Ahmed <span class="accent">Saghir</span>
+        <span class="tagline">Pakistan Peoples Party</span>
+      </div>
+      <ul class="footer-nav">
+        <li><a href="#about">About</a></li>
+        <li><a href="#priorities">Manifesto</a></li>
+        <li><a href="#news">News</a></li>
+        <li><a href="#media">Media</a></li>
+        <li><a href="#join">Volunteer</a></li>
+        <li><a href="#skills">Skill Development</a></li>
+      </ul>
+      <address>Ahmed Saghir for Poonch, PO Box: 1120, Poonch, Punjab</address>
+      <p class="contact-line"><a href="mailto:info@saghir.com">info@saghir.com</a> | <a href="mailto:press@saghir.com">press@saghir.com</a></p>
+      <div class="social-icons">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-x-twitter"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+        <a href="#"><i class="fab fa-tiktok"></i></a>
+      </div>
+      <p style="font-size:0.75rem; opacity:0.5; margin-top:20px;">© 2026 Ahmed Saghir Campaign. All Rights Reserved. Paid for by Ahmed Saghir for Poonch.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
