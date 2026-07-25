@@ -1,0 +1,508 @@
+/* ========================================
+   STYLE.CSS – COMPLETE
+   All styles including Theme Toggle
+   ======================================== */
+
+/* ===== RESET & BASE ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: #ffffff;
+    color: #1e1f2a;
+    line-height: 1.6;
+    transition: background 0.4s ease, color 0.4s ease;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* ===== DARK MODE BODY CLASS ===== */
+body.dark-mode {
+    background: #0b0d10;
+    color: #eaeef2;
+}
+
+/* ===== HEADER – LIGHT & DARK ===== */
+header {
+    background: #ffffff;
+    border-bottom: 1px solid #e9edf2;
+    padding: 16px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.02);
+    transition: background 0.4s ease, border-color 0.4s ease;
+}
+
+body.dark-mode header {
+    background: #0b0d10;
+    border-bottom-color: #1e242c;
+}
+
+/* ===== HEADER INNER ===== */
+.header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 16px 24px;
+}
+
+.logo {
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    color: #1e1f2a;
+    flex-shrink: 0;
+    transition: color 0.4s ease;
+}
+.logo span {
+    color: #4a5cf5;
+}
+
+body.dark-mode .logo {
+    color: #ffffff;
+}
+
+/* ===== NAVIGATION ===== */
+nav {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 28px;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li a {
+    font-weight: 600;
+    font-size: 15px;
+    color: #2c2f3a;
+    transition: color 0.2s;
+    padding: 6px 0;
+    border-bottom: 2px solid transparent;
+}
+
+nav ul li a:hover,
+nav ul li a.active {
+    color: #4a5cf5;
+    border-bottom-color: #4a5cf5;
+}
+
+body.dark-mode nav ul li a {
+    color: #b0b8c5;
+}
+
+body.dark-mode nav ul li a:hover,
+body.dark-mode nav ul li a.active {
+    color: #6c7aff;
+    border-bottom-color: #6c7aff;
+}
+
+/* ===== PRIMARY BUTTON ===== */
+.header-inner .btn-primary {
+    background: #4a5cf5;
+    color: #fff;
+    padding: 10px 28px;
+    border-radius: 40px;
+    font-weight: 700;
+    font-size: 14px;
+    transition: 0.2s;
+    border: none;
+    box-shadow: 0 4px 12px rgba(74, 92, 245, 0.2);
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.header-inner .btn-primary:hover {
+    background: #3a4be0;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(74, 92, 245, 0.25);
+}
+
+body.dark-mode .header-inner .btn-primary {
+    background: #6c7aff;
+    box-shadow: 0 4px 20px rgba(108, 122, 255, 0.3);
+}
+
+body.dark-mode .header-inner .btn-primary:hover {
+    background: #5a68e0;
+    box-shadow: 0 8px 30px rgba(108, 122, 255, 0.4);
+}
+
+/* ===== HAMBURGER MENU ===== */
+.hamburger {
+    display: none;
+    font-size: 26px;
+    cursor: pointer;
+    color: #1e1f2a;
+    transition: color 0.4s ease;
+}
+
+body.dark-mode .hamburger {
+    color: #ffffff;
+}
+
+/* ========================================
+   THEME TOGGLE BUTTON
+   ======================================== */
+.theme-toggle {
+    position: relative;
+    width: 60px;
+    height: 32px;
+    background: #f0f3f8;
+    border-radius: 50px;
+    border: 2px solid #e9edf2;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 3px;
+    transition: 0.4s ease;
+    flex-shrink: 0;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.theme-toggle:hover {
+    border-color: #4a5cf5;
+    box-shadow: 0 0 20px rgba(74, 92, 245, 0.15);
+}
+
+/* Toggle Track (Background) */
+.theme-toggle .toggle-track {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50px;
+    background: #e9edf2;
+    transition: 0.4s ease;
+}
+
+body.dark-mode .theme-toggle .toggle-track {
+    background: #1e242c;
+}
+
+/* Toggle Thumb (Sliding Circle) */
+.theme-toggle .toggle-thumb {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 2;
+}
+
+body.dark-mode .theme-toggle .toggle-thumb {
+    transform: translateX(28px);
+    background: #4a5cf5;
+}
+
+/* Thumb Icon */
+.theme-toggle .toggle-thumb i {
+    font-size: 14px;
+    color: #4a5cf5;
+    transition: 0.4s ease;
+}
+
+body.dark-mode .theme-toggle .toggle-thumb i {
+    color: #ffffff;
+}
+
+/* Sun & Moon Icons Inside Toggle */
+.theme-toggle .toggle-icons {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 8px;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.theme-toggle .toggle-icons .icon-sun {
+    font-size: 13px;
+    color: #f59e0b;
+    opacity: 1;
+    transition: 0.4s ease;
+}
+
+.theme-toggle .toggle-icons .icon-moon {
+    font-size: 13px;
+    color: #6b7280;
+    opacity: 0.5;
+    transition: 0.4s ease;
+}
+
+body.dark-mode .theme-toggle .toggle-icons .icon-sun {
+    opacity: 0.5;
+}
+
+body.dark-mode .theme-toggle .toggle-icons .icon-moon {
+    opacity: 1;
+    color: #fbbf24;
+}
+
+/* ========================================
+   DARK MODE – COMMON ELEMENTS
+   ======================================== */
+
+/* Footer */
+footer {
+    background: #f8fafc;
+    border-top: 1px solid #e9edf2;
+    padding: 32px 0;
+    text-align: center;
+    transition: background 0.4s ease, border-color 0.4s ease;
+}
+
+footer .socials {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 12px;
+}
+
+footer .socials a {
+    color: #2c3442;
+    font-size: 20px;
+    transition: 0.2s;
+}
+
+footer .socials a:hover {
+    color: #4a5cf5;
+    transform: translateY(-2px);
+}
+
+footer p {
+    color: #4a5260;
+    font-size: 14px;
+}
+
+body.dark-mode footer {
+    background: #0b0d10;
+    border-top-color: #1e242c;
+}
+
+body.dark-mode footer .socials a {
+    color: #b0b8c5;
+}
+
+body.dark-mode footer .socials a:hover {
+    color: #6c7aff;
+}
+
+body.dark-mode footer p {
+    color: #6b7a8a;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+/* Tablet & Smaller */
+@media (max-width: 992px) {
+    .header-inner .btn-primary {
+        display: none;
+    }
+    
+    nav {
+        flex: 0;
+    }
+    
+    .theme-toggle {
+        margin-left: auto;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    nav ul {
+        display: none;
+        flex-direction: column;
+        background: #ffffff;
+        padding: 20px;
+        width: 100%;
+        border-radius: 16px;
+        border: 1px solid #e9edf2;
+        gap: 12px;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        z-index: 99;
+    }
+    
+    body.dark-mode nav ul {
+        background: #14191f;
+        border-color: #1e242c;
+    }
+    
+    nav ul.open,
+    nav ul.show {
+        display: flex;
+    }
+    
+    .hamburger {
+        display: block;
+    }
+    
+    .header-inner nav {
+        order: 3;
+        flex-basis: 100%;
+    }
+    
+    .header-inner .btn-primary {
+        display: none;
+    }
+    
+    .theme-toggle {
+        margin-left: auto;
+        width: 52px;
+        height: 28px;
+    }
+    
+    .theme-toggle .toggle-thumb {
+        width: 20px;
+        height: 20px;
+    }
+    
+    body.dark-mode .theme-toggle .toggle-thumb {
+        transform: translateX(24px);
+    }
+    
+    .theme-toggle .toggle-icons .icon-sun,
+    .theme-toggle .toggle-icons .icon-moon {
+        font-size: 11px;
+    }
+    
+    .logo {
+        font-size: 22px;
+    }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+    .theme-toggle {
+        width: 48px;
+        height: 26px;
+    }
+    
+    .theme-toggle .toggle-thumb {
+        width: 18px;
+        height: 18px;
+    }
+    
+    body.dark-mode .theme-toggle .toggle-thumb {
+        transform: translateX(22px);
+    }
+    
+    .theme-toggle .toggle-icons .icon-sun,
+    .theme-toggle .toggle-icons .icon-moon {
+        font-size: 10px;
+    }
+    
+    .logo {
+        font-size: 18px;
+    }
+    
+    nav ul li a {
+        font-size: 14px;
+    }
+    
+    .header-inner {
+        gap: 12px;
+    }
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+.section-title {
+    font-size: 36px;
+    font-weight: 800;
+    text-align: center;
+    color: #1a1c26;
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+}
+
+body.dark-mode .section-title {
+    color: #ffffff;
+}
+
+.section-sub {
+    text-align: center;
+    color: #3d4452;
+    font-size: 17px;
+    max-width: 600px;
+    margin: 0 auto 40px;
+}
+
+body.dark-mode .section-sub {
+    color: #b0b8c5;
+}
+
+.btn-primary {
+    background: #4a5cf5;
+    color: #fff;
+    padding: 14px 44px;
+    border-radius: 40px;
+    font-weight: 700;
+    font-size: 16px;
+    display: inline-block;
+    transition: 0.2s;
+    border: none;
+    box-shadow: 0 4px 20px rgba(74, 92, 245, 0.2);
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background: #3a4be0;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(74, 92, 245, 0.3);
+}
+
+body.dark-mode .btn-primary {
+    background: #6c7aff;
+    box-shadow: 0 4px 20px rgba(108, 122, 255, 0.3);
+}
+
+body.dark-mode .btn-primary:hover {
+    background: #5a68e0;
+    box-shadow: 0 8px 30px rgba(108, 122, 255, 0.4);
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+    .theme-toggle {
+        display: none !important;
+    }
+    .hamburger {
+        display: none !important;
+    }
+}

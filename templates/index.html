@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+
+{% block title %}HIFI Marketing & Technologies | Home{% endblock %}
+
+{% block content %}
+
+<section id="home" class="hero">
+    <div class="container">
+        <div class="hero-wrap">
+            <div class="hero-left">
+                <h1>We are digital design <br /><span class="highlight">CREATORS</span></h1>
+                <p>From Concept to Creation — Beautiful design has the power to captivate audiences</p>
+                <a href="{{ url_for('public.home') }}#services-section" class="btn-primary">Explore Our Work</a>
+            </div>
+            <div class="hero-right">
+                <div class="video-wrapper">
+                    <video autoplay loop muted playsinline id="heroVideo">
+                        <source src="{{ url_for('static', filename='images/herovideo.mov') }}" type="video/mp4" />
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="logos-section">
+    <div class="container">
+        <p class="logos-heading">We work with the world's top companies</p>
+        <div class="logo-slider-wrapper">
+            <div class="logo-track" id="track1">
+                <div class="logo-track-inner">
+                    <span class="logo-item"><i class="fab fa-google"></i> Google</span>
+                    <span class="logo-item"><i class="fab fa-microsoft"></i> Microsoft</span>
+                    <span class="logo-item"><i class="fab fa-amazon"></i> Amazon</span>
+                    <span class="logo-item"><i class="fab fa-apple"></i> Apple</span>
+                    <span class="logo-item"><i class="fab fa-facebook"></i> Meta</span>
+                    <span class="logo-item"><i class="fab fa-tesla"></i> Tesla</span>
+                    <span class="logo-item"><i class="fab fa-netflix"></i> Netflix</span>
+                    <span class="logo-item"><i class="fab fa-spotify"></i> Spotify</span>
+                    <span class="logo-item"><i class="fab fa-google"></i> Google</span>
+                    <span class="logo-item"><i class="fab fa-microsoft"></i> Microsoft</span>
+                    <span class="logo-item"><i class="fab fa-amazon"></i> Amazon</span>
+                    <span class="logo-item"><i class="fab fa-apple"></i> Apple</span>
+                    <span class="logo-item"><i class="fab fa-facebook"></i> Meta</span>
+                    <span class="logo-item"><i class="fab fa-tesla"></i> Tesla</span>
+                    <span class="logo-item"><i class="fab fa-netflix"></i> Netflix</span>
+                    <span class="logo-item"><i class="fab fa-spotify"></i> Spotify</span>
+                </div>
+            </div>
+            <div class="logo-track" id="track2">
+                <div class="logo-track-inner reverse">
+                    <span class="logo-item"><i class="fab fa-adobe"></i> Adobe</span>
+                    <span class="logo-item"><i class="fab fa-salesforce"></i> Salesforce</span>
+                    <span class="logo-item"><i class="fas fa-database"></i> Oracle</span>
+                    <span class="logo-item"><i class="fas fa-chart-line"></i> SAP</span>
+                    <span class="logo-item"><i class="fab fa-ibm"></i> IBM</span>
+                    <span class="logo-item"><i class="fas fa-network-wired"></i> Cisco</span>
+                    <span class="logo-item"><i class="fas fa-microchip"></i> Intel</span>
+                    <span class="logo-item"><i class="fas fa-print"></i> HP</span>
+                    <span class="logo-item"><i class="fab fa-adobe"></i> Adobe</span>
+                    <span class="logo-item"><i class="fab fa-salesforce"></i> Salesforce</span>
+                    <span class="logo-item"><i class="fas fa-database"></i> Oracle</span>
+                    <span class="logo-item"><i class="fas fa-chart-line"></i> SAP</span>
+                    <span class="logo-item"><i class="fab fa-ibm"></i> IBM</span>
+                    <span class="logo-item"><i class="fas fa-network-wired"></i> Cisco</span>
+                    <span class="logo-item"><i class="fas fa-microchip"></i> Intel</span>
+                    <span class="logo-item"><i class="fas fa-print"></i> HP</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="services-section">
+    <div class="container">
+        <h2 class="section-title">EXPLORE WHAT WE CAN DO FOR YOU</h2>
+        <p class="section-sub">Hover over each service to see a preview, or click the <strong>+</strong> icon to expand</p>
+
+        <div class="services-numbered">
+            <div class="service-row" data-image="{{ url_for('static', filename='images/faizan.avif') }}" data-title="Websites" data-desc="Crafting engaging online experiences that convert visitors into loyal customers.">
+                <div class="number">01</div>
+                <div class="info"><h3>WEBSITES</h3><p>Crafting engaging online experiences</p></div>
+                <div class="arrow">&rarr;</div>
+                <button class="expand-btn" onclick="toggleService(this)" aria-label="Toggle service details"><i class="fas fa-plus"></i></button>
+                <div class="service-content">
+                    <ul>
+                        <li>Custom website design &amp; development</li>
+                        <li>Responsive &amp; mobile-first approach</li>
+                        <li>E-commerce solutions (WooCommerce, Shopify)</li>
+                        <li>CMS integration (WordPress, Webflow)</li>
+                        <li>Speed optimization &amp; performance tuning</li>
+                        <li>SEO-friendly architecture</li>
+                        <li>WhatsApp &amp; live chat integration</li>
+                        <li>Ongoing maintenance &amp; support</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="service-row" data-image="{{ url_for('static', filename='images/social.jpg') }}" data-title="Social Media" data-desc="Elevate your brand's online presence with strategic content and community management.">
+                <div class="number">02</div>
+                <div class="info"><h3>SOCIAL MEDIA</h3><p>Elevate your brand's online presence</p></div>
+                <div class="arrow">&rarr;</div>
+                <button class="expand-btn" onclick="toggleService(this)" aria-label="Toggle service details"><i class="fas fa-plus"></i></button>
+                <div class="service-content">
+                    <ul>
+                        <li>Social media strategy &amp; planning</li>
+                        <li>Content creation &amp; calendar management</li>
+                        <li>Community engagement &amp; response</li>
+                        <li>Paid social advertising (Meta, LinkedIn, TikTok)</li>
+                        <li>Analytics &amp; performance reporting</li>
+                        <li>Influencer marketing &amp; partnerships</li>
+                        <li>Brand voice &amp; visual identity alignment</li>
+                        <li>Instagram, Facebook, LinkedIn, Twitter, TikTok</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="service-row" data-image="{{ url_for('static', filename='images/CRM.webp') }}" data-title="CRM/ERP" data-desc="Streamline your processes and customer relationships with powerful automation tools.">
+                <div class="number">03</div>
+                <div class="info"><h3>CRM/ERP</h3><p>Streamline your processes and customer relationships</p></div>
+                <div class="arrow">&rarr;</div>
+                <button class="expand-btn" onclick="toggleService(this)" aria-label="Toggle service details"><i class="fas fa-plus"></i></button>
+                <div class="service-content">
+                    <ul>
+                        <li>Custom CRM development &amp; integration</li>
+                        <li>Sales pipeline &amp; lead management</li>
+                        <li>Email automation &amp; marketing campaigns</li>
+                        <li>Customer data &amp; analytics</li>
+                        <li>ERP system implementation</li>
+                        <li>Inventory &amp; order management</li>
+                        <li>HR &amp; payroll integration</li>
+                        <li>Zoho, Salesforce, HubSpot, Odoo expertise</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="service-row" data-image="{{ url_for('static', filename='images/Ads.webp') }}" data-title="Ads Management" data-desc="Maximize your reach and ROI with data-driven advertising campaigns.">
+                <div class="number">04</div>
+                <div class="info"><h3>ADS MANAGEMENT</h3><p>Maximize your reach and ROI</p></div>
+                <div class="arrow">&rarr;</div>
+                <button class="expand-btn" onclick="toggleService(this)" aria-label="Toggle service details"><i class="fas fa-plus"></i></button>
+                <div class="service-content">
+                    <ul>
+                        <li>Google Ads (Search, Display, Shopping)</li>
+                        <li>Meta Ads (Facebook &amp; Instagram)</li>
+                        <li>LinkedIn Ads &amp; TikTok Ads</li>
+                        <li>Retargeting &amp; remarketing campaigns</li>
+                        <li>A/B testing &amp; conversion optimization</li>
+                        <li>Keyword research &amp; audience targeting</li>
+                        <li>Daily budget management &amp; bidding</li>
+                        <li>Detailed ROI &amp; performance reporting</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="pricing-section">
+    <div class="container">
+        <h2 class="section-title">Our Pricing Plans</h2>
+        <p class="section-sub">Choose the perfect plan for your business needs</p>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Starter</h3>
+                <div class="price">$29</div>
+                <div class="sub-text">Per month</div>
+                <ul>
+                    <li>Basic Website</li>
+                    <li>5 Pages</li>
+                    <li>Mobile Responsive</li>
+                    <li>Basic SEO</li>
+                    <li>Email Support</li>
+                </ul>
+                <a href="{{ url_for('public.contact') }}" class="btn-primary">Get Started</a>
+            </div>
+            <div class="pricing-card" style="border-color: #4a5cf5; box-shadow: 0 8px 30px rgba(74,92,245,0.08);">
+                <h3>Professional</h3>
+                <div class="price">$79</div>
+                <div class="sub-text">Per month</div>
+                <ul>
+                    <li>Full Website</li>
+                    <li>15 Pages</li>
+                    <li>E-commerce Ready</li>
+                    <li>Advanced SEO</li>
+                    <li>Priority Support</li>
+                    <li>Analytics Dashboard</li>
+                </ul>
+                <a href="{{ url_for('public.contact') }}" class="btn-primary" style="background: #4a5cf5;">Get Started</a>
+            </div>
+            <div class="pricing-card">
+                <h3>Enterprise</h3>
+                <div class="price">$199</div>
+                <div class="sub-text">Per month</div>
+                <ul>
+                    <li>Custom Solutions</li>
+                    <li>Unlimited Pages</li>
+                    <li>CRM Integration</li>
+                    <li>Full SEO Suite</li>
+                    <li>24/7 Support</li>
+                    <li>Custom Development</li>
+                </ul>
+                <a href="{{ url_for('public.contact') }}" class="btn-primary">Contact Us</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="about-section">
+    <div class="container">
+        <h2 class="section-title">About Us</h2>
+        <p class="section-sub">Learn more about who we are and what we do</p>
+        <div class="about-wrap">
+            <div class="about-left">
+                <img src="{{ url_for('static', filename='images/left.jpg') }}" alt="Team work" class="about-left-img" />
+                <div class="create-circle">
+                    <span class="create-tag">CREATE</span>
+                    <p class="idea-text">Idea &bull; Insight<br />Solution</p>
+                </div>
+            </div>
+            <div class="about-right">
+                <h2>WE ARE LEADING DIGITAL TRANSFORMATION EXPERTS</h2>
+                <div class="about-story">
+                    <h3>Our story</h3>
+                    <p>At HIFI Marketing &amp; Technologies, we specialize in crafting custom digital solutions that drive real business growth. From innovative website design and development to strategic social media management, powerful CRM automation, and targeted digital advertising, we tailor our services to meet your unique business needs and deliver measurable results.</p>
+                </div>
+                <div class="about-right-image-wrapper">
+                    <img src="{{ url_for('static', filename='images/right.webp') }}" alt="Digital transformation" class="about-right-img" />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="stats-section">
+    <div class="container">
+        <h2 class="section-title">Our Achievements</h2>
+        <p class="section-sub">Numbers that speak for themselves</p>
+        <div class="stats-grid">
+            <div class="stat-box"><div class="number">10+</div><div class="label">Years Experience</div></div>
+            <div class="stat-box"><div class="number">500+</div><div class="label">Projects Done</div></div>
+            <div class="stat-box"><div class="number">140+</div><div class="label">Happy Clients</div></div>
+            <div class="stat-box"><div class="number">98%</div><div class="label">Satisfied Clients</div></div>
+        </div>
+    </div>
+</section>
+
+<section id="contact-section" class="cta-section" style="border-top:1px solid #e9edf2;background:#f8fafc;">
+    <div class="container">
+        <h2>Ready to Transform Your Business?</h2>
+        <p>Let's discuss how HIFI Marketing &amp; Technologies can elevate your digital presence and drive measurable growth.</p>
+        <a href="{{ url_for('public.login') }}" class="btn-primary">Get Your Custom Quote</a>
+    </div>
+</section>
+
+<div class="hover-box" id="hoverBox">
+    <img id="hoverImage" src="" alt="Service preview" />
+    <div class="box-title" id="hoverTitle">Title</div>
+    <div class="box-desc" id="hoverDesc">Description</div>
+</div>
+
+{% endblock %}
