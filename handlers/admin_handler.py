@@ -2,6 +2,9 @@ def init_admin_routes(app):
     @app.route('/admin/dashboard')
     def admin_dashboard():
         from flask import session, redirect
-        if 'user_id' not in session or session.get('user_role') not in ('admin', 'super_admin'):
+        if 'user_id' not in session:
             return redirect('/login')
-        return 'Admin Dashboard'
+        role = session.get('user_role', '')
+        if role in ('admin', 'super_admin'):
+            return redirect('/career/admin/dashboard')
+        return redirect('/login')

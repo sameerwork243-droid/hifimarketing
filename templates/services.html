@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Services | HIFI Marketing & Technologies{% endblock %}
+{% block title %}HIFI Marketing & Technologies | Services{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -365,7 +365,7 @@
       gap: 10px;
     }
     .service-content ul li::before {
-      content: "▸";
+      content: "\25B8";
       color: #4a5cf5;
       font-weight: 700;
       font-size: 16px;
@@ -411,7 +411,7 @@
       line-height: 1.4;
     }
 
-    /* ----- PRICING – LIGHT (Fixed Alignment) ----- */
+    /* ----- PRICING – LIGHT ----- */
     #pricing {
       background: #f8fafc;
       padding: 60px 0 70px;
@@ -474,7 +474,7 @@
       gap: 8px;
     }
     .pricing-card ul li::before {
-      content: "✓";
+      content: "\2713";
       color: #4a5cf5;
       font-weight: 700;
     }
@@ -496,6 +496,54 @@
       background: #3a4be0;
       transform: translateY(-2px);
       box-shadow: 0 8px 20px rgba(74, 92, 245, 0.2);
+    }
+
+    /* ===== CTA SECTION ===== */
+    .cta-section {
+      background: #f8fafc;
+      border-top: 1px solid #e9edf2;
+      padding: 80px 0;
+      text-align: center;
+    }
+    .cta-section h2 {
+      font-size: 36px;
+      font-weight: 800;
+      color: #1a1c26;
+      margin-bottom: 12px;
+    }
+    .cta-section p {
+      font-size: 18px;
+      color: #4a5260;
+      max-width: 600px;
+      margin: 0 auto 28px;
+    }
+    .cta-section .btn-primary {
+      background: #4a5cf5;
+      color: #fff;
+      padding: 14px 40px;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 16px;
+      display: inline-block;
+      transition: 0.2s;
+      border: none;
+      box-shadow: 0 4px 12px rgba(74, 92, 245, 0.2);
+    }
+    .cta-section .btn-primary:hover {
+      background: #3a4be0;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(74, 92, 245, 0.25);
+    }
+
+    body.dark-mode .cta-section {
+      background: #0b0d10;
+      border-top-color: #1e242c;
+    }
+    body.dark-mode .cta-section h2 {
+      color: #eaeef2;
+    }
+    body.dark-mode .cta-section p {
+      color: #b0b8c5;
     }
 
     /* ===== DEVELOPER CREDIT ===== */
@@ -815,7 +863,7 @@
         <div class="service-row" data-image="{{ url_for('static', filename='images/faizan.avif') }}" data-title="Websites" data-desc="Crafting engaging online experiences that convert visitors into loyal customers.">
           <div class="number">01</div>
           <div class="info"><h3>WEBSITES</h3><p>Crafting engaging online experiences</p></div>
-          <div class="arrow">→</div>
+          <div class="arrow">&rarr;</div>
           <button class="expand-btn" onclick="toggleService(this)"><i class="fas fa-plus"></i></button>
           <div class="service-content">
             <ul>
@@ -834,7 +882,7 @@
         <div class="service-row" data-image="{{ url_for('static', filename='images/social.jpg') }}" data-title="Social Media" data-desc="Elevate your brand's online presence with strategic content and community management.">
           <div class="number">02</div>
           <div class="info"><h3>SOCIAL MEDIA</h3><p>Elevate your brand's online presence</p></div>
-          <div class="arrow">→</div>
+          <div class="arrow">&rarr;</div>
           <button class="expand-btn" onclick="toggleService(this)"><i class="fas fa-plus"></i></button>
           <div class="service-content">
             <ul>
@@ -853,7 +901,7 @@
         <div class="service-row" data-image="{{ url_for('static', filename='images/CRM.webp') }}" data-title="CRM/ERP" data-desc="Streamline your processes and customer relationships with powerful automation tools.">
           <div class="number">03</div>
           <div class="info"><h3>CRM/ERP</h3><p>Streamline your processes and customer relationships</p></div>
-          <div class="arrow">→</div>
+          <div class="arrow">&rarr;</div>
           <button class="expand-btn" onclick="toggleService(this)"><i class="fas fa-plus"></i></button>
           <div class="service-content">
             <ul>
@@ -872,7 +920,7 @@
         <div class="service-row" data-image="{{ url_for('static', filename='images/Ads.webp') }}" data-title="Ads Management" data-desc="Maximize your reach and ROI with data-driven advertising campaigns.">
           <div class="number">04</div>
           <div class="info"><h3>ADS MANAGEMENT</h3><p>Maximize your reach and ROI</p></div>
-          <div class="arrow">→</div>
+          <div class="arrow">&rarr;</div>
           <button class="expand-btn" onclick="toggleService(this)"><i class="fas fa-plus"></i></button>
           <div class="service-content">
             <ul>
@@ -951,19 +999,28 @@
         </div>
       </div>
       <div style="text-align:center;margin-top:30px;">
-        <p style="color:#4a5260;">Need a Custom Solution? <a href="{{ url_for('public.contact') }}" style="color:#4a5cf5;font-weight:700;">Get Custom Quote →</a></p>
+        <p style="color:#4a5260;">Need a Custom Solution? <a href="{{ url_for('public.contact') }}" style="color:#4a5cf5;font-weight:700;">Get Custom Quote &rarr;</a></p>
       </div>
     </div>
   </section>
 
-  <!-- HOVER BOX – Image Preview -->
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container">
+      <h2>Ready to Transform Your Business?</h2>
+      <p>Let's discuss how HIFI Marketing &amp; Technologies can elevate your digital presence and drive measurable growth.</p>
+      <a href="{{ url_for('public.contact') }}" class="btn-primary">Get Your Custom Quote</a>
+    </div>
+  </section>
+
+  <!-- HOVER BOX -->
   <div class="hover-box" id="hoverBox">
     <img id="hoverImage" src="" alt="Service preview" />
     <div class="box-title" id="hoverTitle">Title</div>
     <div class="box-desc" id="hoverDesc">Description</div>
   </div>
 
-  <!-- ===== DEVELOPER CREDIT ===== -->
+  <!-- DEVELOPER CREDIT -->
   <div class="developer-credit">
     <p>Developed by <a href="https://foryoumoazma.my.canva.site/fz-cube-tech">Muhammad Faizan</a></p>
   </div>
@@ -971,7 +1028,6 @@
 
 {% block extra_js %}
 <script>
-    // ===== EXPAND/SHRINK SERVICE =====
     function toggleService(btn) {
       const row = btn.closest('.service-row');
       const content = row.querySelector('.service-content');
@@ -981,7 +1037,6 @@
       icon.className = content.classList.contains('open') ? 'fas fa-minus' : 'fas fa-plus';
     }
 
-    // ===== HOVER BOX – IMAGE PREVIEW =====
     const hoverBox = document.getElementById('hoverBox');
     const hoverImage = document.getElementById('hoverImage');
     const hoverTitle = document.getElementById('hoverTitle');

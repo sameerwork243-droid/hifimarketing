@@ -1,0 +1,122 @@
+{% extends 'career_admin/base.html' %}
+{% block header_title %}Interviews{% endblock %}
+{% block header_subtitle %}Schedule and manage interviews{% endblock %}
+
+{% block extra_css %}
+<style>
+.interview-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.interview-card { background:var(--admin-card-bg); border:1px solid var(--admin-border); border-radius:14px; padding:24px; }
+.interview-card.full { grid-column:1/-1; }
+.interview-card h3 { font-size:14px; font-weight:700; color:var(--admin-text-primary); margin-bottom:16px; padding-bottom:10px; border-bottom:1px solid var(--admin-border); }
+.form-group { margin-bottom:14px; }
+.form-group label { display:block; font-size:12px; font-weight:600; color:var(--admin-text-secondary); margin-bottom:4px; }
+.form-group input, .form-group select, .form-group textarea { width:100%; padding:10px 14px; border:1px solid var(--admin-border); border-radius:8px; font-size:13px; background:var(--admin-body-bg); color:var(--admin-text-primary); }
+.form-group textarea { min-height:80px; resize:vertical; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.btn-schedule { padding:10px 24px; background:#4a5cf5; color:#fff; border:none; border-radius:8px; font-weight:600; font-size:13px; cursor:pointer; }
+.int-item { display:flex; align-items:center; gap:16px; padding:14px 0; border-bottom:1px solid var(--admin-border); }
+.int-item:last-child { border-bottom:none; }
+.int-info { flex:1; }
+.int-info .name { font-weight:600; font-size:14px; color:var(--admin-text-primary); }
+.int-info .meta { font-size:12px; color:var(--admin-text-muted); margin-top:2px; }
+.int-info .meta span { margin-right:14px; }
+.int-badge { padding:4px 12px; border-radius:20px; font-size:11px; font-weight:600; }
+.int-badge.scheduled { background:#dbeafe; color:#1e40af; }
+.int-badge.completed { background:#dcfce7; color:#166534; }
+.int-badge.cancelled { background:#fef2f2; color:#991b1b; }
+.btn-cancel-int { padding:6px 14px; background:#fef2f2; color:#991b1b; border:none; border-radius:6px; font-size:11px; font-weight:600; cursor:pointer; }
+.btn-cancel-int:hover { background:#fee2e2; }
+.empty-state { text-align:center; padding:60px 20px; color:var(--admin-text-muted); }
+.empty-state i { font-size:48px; margin-bottom:12px; opacity:.4; }
+@media (max-width:768px) { .interview-grid { grid-template-columns:1fr; } .form-row { grid-template-columns:1fr; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="interview-grid">
+  <div class="interview-card">
+    <h3><i class="fas fa-plus-circle" style="color:#4a5cf5;"></i> Schedule Interview</h3>
+    <form method="POST" action="/career/admin/interviews">
+      <input type="hidden" name="action" value="schedule">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Candidate Name *</label>
+          <input type="text" name="candidate_name" list="candidateNames" required placeholder="Type or select...">
+          <datalist id="candidateNames">
+            {% for a in applications %}
+            <option value="{{ a.first_name }} {{ a.last_name }}">
+            {% endfor %}
+          </datalist>
+        </div>
+        <div class="form-group">
+          <label>Candidate Email *</label>
+          <input type="email" name="candidate_email" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Job Title</label>
+        <input type="text" name="job_title" placeholder="e.g. Web Developer">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" name="interview_date">
+        </div>
+        <div class="form-group">
+          <label>Time</label>
+          <input type="time" name="interview_time">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Type</label>
+          <select name="interview_type">
+            <option value="video">Video Call</option>
+            <option value="phone">Phone Call</option>
+            <option value="in-person">In-Person</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Location / Link</label>
+          <input type="text" name="location_link" placeholder="Zoom/Teams link or address">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <textarea name="notes"></textarea>
+      </div>
+      <button type="submit" class="btn-schedule"><i class="fas fa-calendar-plus"></i> Schedule Interview</button>
+    </form>
+  </div>
+
+  <div class="interview-card">
+    <h3><i class="fas fa-list" style="color:#4a5cf5;"></i> Upcoming Interviews</h3>
+    {% if interviews %}
+      {% for iv in interviews %}
+      <div class="int-item">
+        <div class="int-info">
+          <div class="name">{{ iv.candidate_name }}</div>
+          <div class="meta">
+            <span><i class="fas fa-briefcase"></i> {{ iv.job_title or 'N/A' }}</span>
+            <span><i class="fas fa-calendar"></i> {{ iv.interview_date.strftime('%b %d, %Y') if iv.interview_date else 'TBD' }}</span>
+            <span><i class="fas fa-clock"></i> {{ iv.interview_time or 'TBD' }}</span>
+            <span><i class="fas fa-video"></i> {{ iv.interview_type|capitalize }}</span>
+          </div>
+        </div>
+        <span class="int-badge {{ iv.status }}">{{ iv.status|capitalize }}</span>
+        {% if iv.status == 'scheduled' %}
+        <form method="POST" action="/career/admin/interviews/{{ iv.id }}/cancel" style="display:inline;" onsubmit="return confirm('Cancel this interview?');">
+          <button type="submit" class="btn-cancel-int"><i class="fas fa-times"></i></button>
+        </form>
+        {% endif %}
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state" style="padding:30px 0;">
+        <i class="fas fa-calendar"></i>
+        <p>No interviews scheduled yet.</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

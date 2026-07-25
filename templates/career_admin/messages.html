@@ -1,0 +1,74 @@
+{% extends 'career_admin/base.html' %}
+{% block header_title %}Messages{% endblock %}
+{% block header_subtitle %}{{ unread_count }} unread messages{% endblock %}
+
+{% block extra_css %}
+<style>
+.msgs-toolbar { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+.msgs-toolbar .search-box { flex:1; position:relative; max-width:350px; }
+.msgs-toolbar .search-box input { width:100%; padding:10px 14px 10px 38px; border:1px solid var(--admin-border); border-radius:10px; font-size:13px; background:var(--admin-card-bg); color:var(--admin-text-primary); }
+.msgs-toolbar .search-box i { position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#94a3b8; }
+.tabs { display:flex; gap:0; margin-bottom:0; border-bottom:2px solid var(--admin-border); }
+.tab { padding:12px 24px; font-size:13px; font-weight:600; color:var(--admin-text-muted); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; text-decoration:none; }
+.tab:hover { color:var(--admin-text-primary); }
+.tab.active { color:#4a5cf5; border-bottom-color:#4a5cf5; }
+.msg-item { display:flex; align-items:center; gap:14px; padding:14px 20px; background:var(--admin-card-bg); border:1px solid var(--admin-border); border-top:none; cursor:pointer; text-decoration:none; color:inherit; transition:.1s; }
+.msg-item:first-of-type { border-radius:12px 12px 0 0; border-top:1px solid var(--admin-border); }
+.msg-item:last-of-type { border-radius:0 0 12px 12px; }
+.msg-item:hover { background:rgba(74,92,245,0.03); }
+.msg-item.unread { border-left:3px solid #4a5cf5; }
+.msg-avatar { width:40px; height:40px; border-radius:50%; background:#e8edfe; color:#4a5cf5; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; flex-shrink:0; }
+.msg-info { flex:1; min-width:0; }
+.msg-info .sender { font-weight:600; font-size:13px; color:var(--admin-text-primary); }
+.msg-info .subject { font-size:12px; color:var(--admin-text-secondary); margin-top:1px; }
+.msg-info .preview { font-size:11px; color:var(--admin-text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.msg-date { font-size:11px; color:var(--admin-text-muted); white-space:nowrap; }
+.empty-state { text-align:center; padding:60px 20px; color:var(--admin-text-muted); background:var(--admin-card-bg); border-radius:12px; border:1px solid var(--admin-border); }
+.empty-state i { font-size:48px; margin-bottom:12px; opacity:.4; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="tabs">
+  <a href="/career/admin/messages?tab=inbox" class="tab {% if tab == 'inbox' %}active{% endif %}">Inbox</a>
+  <a href="/career/admin/messages?tab=sent" class="tab {% if tab == 'sent' %}active{% endif %}">Sent</a>
+</div>
+
+<div class="msgs-toolbar" style="margin-top:16px;">
+  <div class="search-box">
+    <i class="fas fa-search"></i>
+    <input type="text" placeholder="Search messages..." value="{{ search }}" oninput="debounceSearch(this.value)" id="searchInput">
+  </div>
+</div>
+
+{% if messages %}
+{% for m in messages %}
+<a href="/career/admin/messages/{{ m.id }}" class="msg-item {% if m.status == 'unread' and tab == 'inbox' %}unread{% endif %}">
+  <div class="msg-avatar">{{ (m.name or m.email or '?')[:1] | upper }}</div>
+  <div class="msg-info">
+    <div class="sender">{{ m.name or m.email }}</div>
+    <div class="subject">{{ m.subject or '(No subject)' }}</div>
+    <div class="preview">{{ m.message[:80] if m.message else '' }}{% if m.message and m.message|length > 80 %}...{% endif %}</div>
+  </div>
+  <span class="msg-date">{{ m.created_at.strftime('%b %d') if m.created_at else '' }}</span>
+</a>
+{% endfor %}
+{% else %}
+<div class="empty-state">
+  <i class="fas fa-envelope-open-text"></i>
+  <p>No messages in {{ tab }}.</p>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let searchTimer;
+function debounceSearch(val) {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    window.location = '/career/admin/messages?tab={{ tab }}&search=' + encodeURIComponent(val);
+  }, 400);
+}
+</script>
+{% endblock %}

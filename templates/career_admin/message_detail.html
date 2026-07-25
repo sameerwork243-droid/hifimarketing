@@ -1,0 +1,68 @@
+{% extends 'career_admin/base.html' %}
+{% block header_title %}Message{% endblock %}
+{% block header_subtitle %}{{ msg.subject or '(No subject)' }}{% endblock %}
+
+{% block extra_css %}
+<style>
+.msg-detail { background:var(--admin-card-bg); border:1px solid var(--admin-border); border-radius:14px; padding:24px; }
+.msg-header { display:flex; align-items:center; gap:14px; padding-bottom:16px; border-bottom:1px solid var(--admin-border); margin-bottom:16px; }
+.msg-avatar { width:44px; height:44px; border-radius:50%; background:#e8edfe; color:#4a5cf5; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:16px; }
+.msg-meta { flex:1; }
+.msg-meta .sender { font-weight:600; font-size:15px; color:var(--admin-text-primary); }
+.msg-meta .sub { font-size:12px; color:var(--admin-text-muted); }
+.msg-body { font-size:14px; line-height:1.7; color:var(--admin-text-primary); white-space:pre-wrap; padding:16px 0; }
+.msg-actions { display:flex; gap:8px; padding-top:16px; border-top:1px solid var(--admin-border); }
+.msg-actions form { display:inline; }
+.msg-actions button, .msg-actions a { padding:8px 18px; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; text-decoration:none; border:none; display:inline-flex; align-items:center; gap:6px; }
+.btn-reply { background:#4a5cf5; color:#fff; }
+.btn-reply:hover { background:#3b4de0; }
+.btn-delete { background:#fef2f2; color:#991b1b; }
+.btn-delete:hover { background:#fee2e2; }
+.btn-back { background:var(--admin-body-bg); color:var(--admin-text-secondary); border:1px solid var(--admin-border); }
+.reply-box { margin-top:20px; background:var(--admin-card-bg); border:1px solid var(--admin-border); border-radius:14px; padding:24px; }
+.reply-box h3 { font-size:14px; font-weight:700; margin-bottom:12px; color:var(--admin-text-primary); }
+.reply-box textarea { width:100%; min-height:120px; padding:12px; border:1px solid var(--admin-border); border-radius:8px; font-size:13px; background:var(--admin-body-bg); color:var(--admin-text-primary); resize:vertical; }
+.reply-box .btn-send { margin-top:10px; padding:10px 24px; background:#4a5cf5; color:#fff; border:none; border-radius:8px; font-weight:600; font-size:13px; cursor:pointer; }
+.back-link { display:inline-flex; align-items:center; gap:6px; color:var(--admin-text-muted); text-decoration:none; font-size:13px; margin-bottom:16px; }
+.back-link:hover { color:#4a5cf5; }
+</style>
+{% endblock %}
+
+{% block content %}
+<a href="/career/admin/messages" class="back-link"><i class="fas fa-arrow-left"></i> Back to Messages</a>
+
+<div class="msg-detail">
+  <div class="msg-header">
+    <div class="msg-avatar">{{ (msg.name or msg.email or '?')[:1] | upper }}</div>
+    <div class="msg-meta">
+      <div class="sender">{{ msg.name or 'Unknown' }}</div>
+      <div class="sub">{{ msg.email }} &middot; {{ msg.created_at.strftime('%b %d, %Y at %I:%M %p') if msg.created_at else '' }}</div>
+    </div>
+  </div>
+  <div class="msg-body">{{ msg.message }}</div>
+  <div class="msg-actions">
+    <button class="btn-reply" onclick="toggleReply()"><i class="fas fa-reply"></i> Reply</button>
+    <form method="POST" action="/career/admin/messages/{{ msg.id }}/delete" onsubmit="return confirm('Delete this message?');">
+      <button type="submit" class="btn-delete"><i class="fas fa-trash"></i> Delete</button>
+    </form>
+    <a href="/career/admin/messages" class="btn-back"><i class="fas fa-arrow-left"></i> Back</a>
+  </div>
+</div>
+
+<div class="reply-box" id="replyBox" style="display:none;">
+  <h3>Reply to {{ msg.name or msg.email }}</h3>
+  <form method="POST" action="/career/admin/messages/{{ msg.id }}/reply">
+    <textarea name="message" placeholder="Type your reply..." required></textarea>
+    <button type="submit" class="btn-send"><i class="fas fa-paper-plane"></i> Send Reply</button>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function toggleReply() {
+  const box = document.getElementById('replyBox');
+  box.style.display = box.style.display === 'none' ? 'block' : 'none';
+}
+</script>
+{% endblock %}

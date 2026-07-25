@@ -7,7 +7,6 @@ from utils.security import configure_app_security
 
 app = Flask(__name__, static_folder='static')
 app.secret_key = os.getenv('SECRET_KEY', 'hifi-marketing-inplace-migration-key')
-init_db(app)
 app.config['DB_ENGINE'] = os.getenv('DB_ENGINE', os.getenv('DATABASE_MODE', 'MSSQL'))
 app.config['AUTO_FAILOVER'] = os.getenv('AUTO_FAILOVER', 'true')
 app.config['DB_HOST'] = os.getenv('DB_HOST', '127.0.0.1')
@@ -27,6 +26,8 @@ app.config['SITE_URL'] = os.getenv('SITE_URL', 'http://localhost:8000/')
 app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(__file__), 'uploads')
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
+init_db(app)
+
 configure_app_security(app)
 
 @app.context_processor
@@ -41,6 +42,33 @@ def inject_globals():
             'role': session.get('user_role')
         } if 'user_id' in session else None
     }
+
+@app.template_filter('time_ago')
+def time_ago_filter(dt):
+    if not dt:
+        return 'N/A'
+    from datetime import datetime
+    now = datetime.now()
+    if isinstance(dt, str):
+        try:
+            dt = datetime.strptime(dt, '%Y-%m-%d %H:%M:%S')
+        except ValueError:
+            try:
+                dt = datetime.strptime(dt, '%Y-%m-%d')
+            except ValueError:
+                return dt
+    diff = now - dt
+    if diff.days > 365:
+        return f'{diff.days // 365}y ago'
+    if diff.days > 30:
+        return f'{diff.days // 30}mo ago'
+    if diff.days > 0:
+        return f'{diff.days}d ago'
+    if diff.seconds >= 3600:
+        return f'{diff.seconds // 3600}h ago'
+    if diff.seconds >= 60:
+        return f'{diff.seconds // 60}m ago'
+    return 'just now'
 
 @app.template_filter('e')
 def escape_filter(text):
@@ -107,7 +135,7 @@ print('  DATABASE HEALTH CHECK')
 print('=' * 60)
 try:
     from database.seed import seed_demo_users
-    seed_demo_users()
+    seed_demo_users(app)
 except Exception as seed_err:
     import traceback
     print(f'  [FAIL] Seeding error: {seed_err}')

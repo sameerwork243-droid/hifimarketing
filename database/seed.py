@@ -2,44 +2,53 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def seed_demo_users():
+def seed_demo_users(app):
     try:
         from db import get_db, DatabaseUnavailableError
-        engine_info = __import__('flask').current_app.config.get('DB_ENGINE', 'unknown')
-        print(f'  Detected engine: {engine_info}')
-        try:
+        from helpers import hash_password
+        from werkzeug.security import check_password_hash
+        with app.app_context():
+            print(f'  Detected engine: {app.config.get("DB_ENGINE", "unknown")}')
             db = get_db()
-            cursor = db[0]
-            engine = db[1]
-            cursor.execute("SELECT COUNT(*) as cnt FROM users")
-            count = cursor.fetchone()['cnt']
-            if count > 0:
-                print('  ~ Users table has data, skipping seed')
-                cursor.close()
-                return
-        except Exception:
-            pass
-        demo_users = [
-            ('admin@hifi.com', 'Admin', 'admin123', 'admin'),
-            ('pm@hifi.com', 'Project Manager', 'pm123', 'project_manager'),
-            ('client@hifi.com', 'Client User', 'client123', 'client'),
-            ('careers@hifimarketing.co', 'Careers Admin', 'careers321', 'careers_admin'),
-        ]
-        created = 0
-        for email, username, password, role in demo_users:
-            try:
-                cursor.execute("SELECT id FROM users WHERE email = ?", (email,))
-                if cursor.fetchone():
-                    print(f'  ~ {email} already exists, skipping')
-                    continue
-                cursor.execute("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)", (username, email, password, role))
-                cursor._cur.commit()
-                print(f'  + {email} created as {role}')
-                created += 1
-            except Exception as ue:
-                print(f'  ! {email}: {ue}')
-        if created == 0:
-            print('  ~ all demo users already exist')
+            demo_users = [
+                ('admin@hifi.com', 'Admin', 'admin123', 'super_admin'),
+                ('pm@hifi.com', 'Project Manager', 'pm123', 'pm'),
+                ('client@hifi.com', 'Client User', 'client123', 'client'),
+                ('careers@hifimarketing.co', 'Careers Admin', 'careers321', 'super_admin'),
+                ('career-admin@hifi.com', 'Career Admin', 'career123', 'admin'),
+                ('career-user@hifi.com', 'Career User', 'user123', 'user'),
+            ]
+            created = 0
+            updated = 0
+            for email, username, password, role in demo_users:
+                try:
+                    existing = db.execute("SELECT id, password FROM users WHERE email = ?", (email,)).fetchone()
+                    hashed = hash_password(password)
+                    if existing:
+                        if not check_password_hash(existing['password'], password):
+                            db.execute(
+                                "UPDATE users SET password = ? WHERE id = ?",
+                                (hashed, existing['id'])
+                            )
+                            db.commit()
+                            print(f'  ~ {email} password updated to werkzeug format')
+                            updated += 1
+                        else:
+                            print(f'  ~ {email} already has valid password')
+                    else:
+                        db.execute(
+                            "INSERT INTO users (username, email, password, role, user_role) VALUES (?, ?, ?, ?, ?)",
+                            (username, email, hashed, role, role)
+                        )
+                        db.commit()
+                        print(f'  + {email} created as {role}')
+                        created += 1
+                except Exception as ue:
+                    print(f'  ! {email}: {ue}')
+            if created == 0 and updated == 0:
+                print('  ~ all demo users already up to date')
+            else:
+                print(f'  Summary: {created} created, {updated} updated')
     except DatabaseUnavailableError:
         print('  [SKIP] Database unavailable for seeding')
     except Exception as e:

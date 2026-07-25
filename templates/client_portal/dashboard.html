@@ -1,0 +1,245 @@
+{% extends "portal_base.html" %}
+
+{% set nav_links = [
+  {"url": "/client/dashboard", "icon": "tachometer-alt", "label": "Dashboard", "active": active_tab == "dashboard"},
+  {"url": "#", "icon": "credit-card", "label": "Packages", "active": active_tab == "packages"},
+  {"url": "#", "icon": "headset", "label": "Support", "active": active_tab == "support"},
+  {"url": "#", "icon": "file-invoice", "label": "Billing", "active": active_tab == "billing"}
+] %}
+
+{% set sidebar_links = [
+  {"url": "/client/dashboard", "icon": "tachometer-alt", "label": "Dashboard", "active": active_tab == "dashboard"},
+  {"url": "#", "icon": "credit-card", "label": "Packages", "active": active_tab == "packages"},
+  {"url": "#", "icon": "headset", "label": "Support", "active": active_tab == "support"},
+  {"url": "#", "icon": "file-invoice", "label": "Billing", "active": active_tab == "billing"}
+] %}
+
+{% set banner_title = "Welcome, " ~ username ~ "! 👋" %}
+{% set banner_subtitle = "Active Package: " ~ (active_package.name if active_package else "No Package") %}
+{% set banner_badge = "CLIENT" %}
+
+{% set ns = namespace(total_completed=0, total_limits=0) %}
+{% if posts_limit and posts_limit > 0 %}
+  {% set ns.total_completed = ns.total_completed + (social_progress.postsCompleted|default(0)) %}
+  {% set ns.total_limits = ns.total_limits + posts_limit %}
+{% endif %}
+{% if stories_limit and stories_limit > 0 %}
+  {% set ns.total_completed = ns.total_completed + (social_progress.storiesCompleted|default(0)) %}
+  {% set ns.total_limits = ns.total_limits + stories_limit %}
+{% endif %}
+{% if reels_limit and reels_limit > 0 %}
+  {% set ns.total_completed = ns.total_completed + (social_progress.reelsCompleted|default(0)) %}
+  {% set ns.total_limits = ns.total_limits + reels_limit %}
+{% endif %}
+{% if ads_limit and ads_limit > 0 %}
+  {% set ns.total_completed = ns.total_completed + (social_progress.adsCompleted|default(0)) %}
+  {% set ns.total_limits = ns.total_limits + ads_limit %}
+{% endif %}
+{% set social_percent = (ns.total_completed / ns.total_limits * 100)|round|int if ns.total_limits > 0 else 0 %}
+
+{% set active_services = 0 %}
+{% if posts_limit and posts_limit > 0 %}{% set active_services = active_services + 1 %}{% endif %}
+{% if stories_limit and stories_limit > 0 %}{% set active_services = active_services + 1 %}{% endif %}
+{% if reels_limit and reels_limit > 0 %}{% set active_services = active_services + 1 %}{% endif %}
+{% if ads_limit and ads_limit > 0 %}{% set active_services = active_services + 1 %}{% endif %}
+
+{% block content %}
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+    <div class="number">{{ social_percent }}%</div>
+    <div class="label">Social Progress</div>
+    <div class="progress-bar">
+      <div class="fill" style="width:{{ social_percent }}%;background:var(--primary)"></div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon"><i class="fas fa-cogs"></i></div>
+    <div class="number">{{ active_services }}</div>
+    <div class="label">Active Services</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon"><i class="fas fa-file-invoice"></i></div>
+    <div class="number">{{ invoices|length }}</div>
+    <div class="label">Total Invoices</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon"><i class="fas fa-ticket-alt"></i></div>
+    <div class="number">{{ tickets|length }}</div>
+    <div class="label">Open Tickets</div>
+  </div>
+</div>
+
+<div class="section-title"><i class="fas fa-credit-card"></i> My Packages</div>
+<div class="package-grid">
+  {% for pkg in packages %}
+  <div class="package-card {% if pkg.id == active_package_id %}active{% endif %}">
+    {% if pkg.id == active_package_id %}<span class="active-badge">Active</span>{% endif %}
+    <div class="pkg-name">{{ pkg.name }}</div>
+    <div class="pkg-price">{{ pkg.currency or 'PKR' }} {{ pkg.price }} <span>/month</span></div>
+    <ul>
+      <li><i class="fas fa-{% if pkg.posts_limit and pkg.posts_limit > 0 %}check-circle" style="color:var(--success){% else %}times-circle" style="color:var(--danger){% endif %}"></i> {{ pkg.posts_limit or 0 }} Posts</li>
+      <li><i class="fas fa-{% if pkg.stories_limit and pkg.stories_limit > 0 %}check-circle" style="color:var(--success){% else %}times-circle" style="color:var(--danger){% endif %}"></i> {{ pkg.stories_limit or 0 }} Stories</li>
+      <li><i class="fas fa-{% if pkg.reels_limit and pkg.reels_limit > 0 %}check-circle" style="color:var(--success){% else %}times-circle" style="color:var(--danger){% endif %}"></i> {{ pkg.reels_limit or 0 }} Reels</li>
+      <li><i class="fas fa-{% if pkg.fb_ig_ads %}check-circle" style="color:var(--success){% else %}times-circle" style="color:var(--danger){% endif %}"></i> FB/IG Ads</li>
+      <li><i class="fas fa-{% if pkg.content_calendar %}check-circle" style="color:var(--success){% else %}times-circle" style="color:var(--danger){% endif %}"></i> Content Calendar</li>
+      <li><i class="fas fa-{% if pkg.monthly_report %}check-circle" style="color:var(--success){% else %}times-circle" style="color:var(--danger){% endif %}"></i> Monthly Report</li>
+    </ul>
+    {% if not active_package or pkg.id != active_package.id %}
+    <button class="btn-switch" onclick="switchPackage({{ pkg.id }})">Switch to this Plan</button>
+    {% else %}
+    <button class="btn-switch active" disabled>Current Plan</button>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <h3><i class="fas fa-headset"></i> Support Tickets</h3>
+      <span class="sub">{{ tickets|length }} tickets</span>
+    </div>
+    {% if tickets %}
+      {% for t in tickets[:3] %}
+      <div class="task-item">
+        <div class="task-header">
+          <span class="task-title">{{ t.title }}</span>
+          <span class="status-badge {{ t.status|lower }}">{{ t.status }}</span>
+        </div>
+        <div class="task-desc">{{ t.description[:100] }}{% if t.description|length > 100 %}...{% endif %}</div>
+        <div class="task-meta">
+          <span><i class="fas fa-tag"></i> {{ t.category }}</span>
+          <span><i class="fas fa-clock"></i> {{ t.created_at }}</span>
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+    <div class="empty-state">
+      <i class="fas fa-ticket-alt"></i>
+      <h4>No tickets yet</h4>
+      <p>Submit a ticket for support</p>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h3><i class="fas fa-file-invoice"></i> Recent Invoices</h3>
+      <span class="sub">{{ invoices|length }} invoices</span>
+    </div>
+    {% if invoices %}
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Invoice</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for inv in invoices[:5] %}
+          <tr>
+            <td><strong>{{ inv.invoice_number }}</strong></td>
+            <td>{{ inv.amount }}</td>
+            <td><span class="status-badge {{ inv.status|lower }}">{{ inv.status }}</span></td>
+            <td>{{ inv.created_at }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <i class="fas fa-file-invoice"></i>
+      <h4>No invoices yet</h4>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function switchPackage(pkgId) {
+  if (!confirm('Switch to this package?')) return;
+  var formData = new FormData();
+  formData.append('ajax_action', 'switch_package');
+  formData.append('package_id', pkgId);
+  showToast('Switching package...', 'warning');
+  fetch(window.location.href, {
+    method: 'POST',
+    body: formData
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.success) {
+      showToast('Package switched!');
+      setTimeout(function() { location.reload(); }, 1500);
+    } else {
+      showToast('Error: ' + data.message, 'error');
+    }
+  })
+  .catch(function() {
+    showToast('Error switching package.', 'error');
+  });
+}
+
+function submitTicket(e, category) {
+  e.preventDefault();
+  var title = document.getElementById('tk-title').value;
+  var desc = document.getElementById('tk-desc').value;
+  if (!title) { showToast('Please fill in all fields.', 'error'); return; }
+  var formData = new FormData();
+  formData.append('ajax_action', 'submit_ticket');
+  formData.append('title', title);
+  formData.append('category', category || 'General');
+  formData.append('description', desc);
+  showToast('Submitting ticket...', 'warning');
+  fetch(window.location.href, {
+    method: 'POST',
+    body: formData
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.success) {
+      showToast('Ticket submitted successfully!');
+      document.getElementById('tk-title').value = '';
+      document.getElementById('tk-desc').value = '';
+      setTimeout(function() { location.reload(); }, 1500);
+    } else {
+      showToast('Error: ' + data.message, 'error');
+    }
+  })
+  .catch(function() {
+    showToast('Error submitting ticket.', 'error');
+  });
+}
+
+function requestAddon(name) {
+  if (!confirm('Request "' + name + '"?')) return;
+  var formData = new FormData();
+  formData.append('ajax_action', 'request_addon');
+  formData.append('name', name);
+  showToast('Requesting add-on...', 'warning');
+  fetch(window.location.href, {
+    method: 'POST',
+    body: formData
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.success) {
+      showToast('Add-on requested!');
+      setTimeout(function() { location.reload(); }, 1500);
+    } else {
+      showToast('Error: ' + data.message, 'error');
+    }
+  })
+  .catch(function() {
+    showToast('Error requesting add-on.', 'error');
+  });
+}
+</script>
+{% endblock %}

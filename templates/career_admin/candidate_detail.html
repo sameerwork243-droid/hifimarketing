@@ -1,0 +1,73 @@
+{% extends 'career_admin/base.html' %}
+{% block header_title %}Candidate Profile{% endblock %}
+{% block header_subtitle %}{{ candidate.username }}{% endblock %}
+
+{% block extra_css %}
+<style>
+.cand-detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.cand-card { background:var(--admin-card-bg); border:1px solid var(--admin-border); border-radius:14px; padding:24px; }
+.cand-card.full { grid-column:1/-1; }
+.cand-card h3 { font-size:14px; font-weight:700; color:var(--admin-text-primary); margin-bottom:16px; padding-bottom:10px; border-bottom:1px solid var(--admin-border); }
+.profile-header { display:flex; align-items:center; gap:16px; margin-bottom:20px; }
+.profile-avatar { width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg,#4a5cf5,#6366f1); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:24px; }
+.profile-info .p-name { font-size:18px; font-weight:700; color:var(--admin-text-primary); }
+.profile-info .p-email { font-size:13px; color:var(--admin-text-muted); }
+.stat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+.stat-box { text-align:center; padding:16px; background:var(--admin-body-bg); border-radius:10px; }
+.stat-box .num { font-size:24px; font-weight:700; color:#4a5cf5; }
+.stat-box .label { font-size:11px; color:var(--admin-text-muted); margin-top:4px; }
+.info-row { display:flex; padding:8px 0; border-bottom:1px solid rgba(0,0,0,0.04); }
+.info-row:last-child { border-bottom:none; }
+.info-label { width:120px; font-size:12px; font-weight:600; color:var(--admin-text-muted); flex-shrink:0; }
+.info-value { flex:1; font-size:13px; color:var(--admin-text-primary); }
+.app-item { display:flex; align-items:center; gap:14px; padding:12px 0; border-bottom:1px solid var(--admin-border); }
+.app-item:last-child { border-bottom:none; }
+.app-item .job-info { flex:1; }
+.app-item .job-info .jtitle { font-weight:600; font-size:13px; color:var(--admin-text-primary); }
+.app-item .job-info .jmeta { font-size:11px; color:var(--admin-text-muted); }
+.status-badge { padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; }
+.status-badge.pending { background:#fef3c7; color:#92400e; }
+.status-badge.reviewed { background:#dbeafe; color:#1e40af; }
+.status-badge.shortlisted { background:#dcfce7; color:#166534; }
+.status-badge.rejected { background:#fef2f2; color:#991b1b; }
+.status-badge.hired { background:#ede9fe; color:#5b21b6; }
+.back-link { display:inline-flex; align-items:center; gap:6px; color:var(--admin-text-muted); text-decoration:none; font-size:13px; margin-bottom:16px; }
+.back-link:hover { color:#4a5cf5; }
+@media (max-width:768px) { .cand-detail-grid { grid-template-columns:1fr; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<a href="/career/admin/candidates" class="back-link"><i class="fas fa-arrow-left"></i> Back to Candidates</a>
+
+<div class="profile-header">
+  <div class="profile-avatar">{{ candidate.username[:2] | upper }}</div>
+  <div class="profile-info">
+    <div class="p-name">{{ candidate.username }}</div>
+    <div class="p-email">{{ candidate.email }}</div>
+  </div>
+</div>
+
+<div class="stat-grid" style="margin-bottom:20px;">
+  <div class="stat-box"><div class="num">{{ candidate.total_apps }}</div><div class="label">Total Applications</div></div>
+  <div class="stat-box"><div class="num">{{ candidate.pending_apps }}</div><div class="label">Pending</div></div>
+  <div class="stat-box"><div class="num">{{ candidate.shortlisted_apps }}</div><div class="label">Shortlisted</div></div>
+</div>
+
+{% if applications %}
+<div class="cand-card full">
+  <h3>Applications History</h3>
+  {% for app in applications %}
+  <div class="app-item">
+    <div class="job-info">
+      <div class="jtitle">{{ app.job_title or 'N/A' }}</div>
+      <div class="jmeta">{{ app.department or '' }} {% if app.department and app.location %} &middot; {% endif %} {{ app.location or '' }}</div>
+    </div>
+    <span class="status-badge {{ app.status }}">{{ app.status|capitalize }}</span>
+    <span style="font-size:11px;color:var(--admin-text-muted);">{{ app.applied_at.strftime('%b %d, %Y') if app.applied_at else '' }}</span>
+    <a href="/career/admin/applications/{{ app.id }}" style="color:#4a5cf5;font-size:12px;">View</a>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

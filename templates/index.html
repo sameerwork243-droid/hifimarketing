@@ -10,7 +10,7 @@
             <div class="hero-left">
                 <h1>We are digital design <br /><span class="highlight">CREATORS</span></h1>
                 <p>From Concept to Creation — Beautiful design has the power to captivate audiences</p>
-                <a href="{{ url_for('public.home') }}#services-section" class="btn-primary">Explore Our Work</a>
+                <a href="#services-section" class="btn-primary">Explore Our Work</a>
             </div>
             <div class="hero-right">
                 <div class="video-wrapper">
@@ -81,7 +81,7 @@
             <div class="service-row" data-image="{{ url_for('static', filename='images/faizan.avif') }}" data-title="Websites" data-desc="Crafting engaging online experiences that convert visitors into loyal customers.">
                 <div class="number">01</div>
                 <div class="info"><h3>WEBSITES</h3><p>Crafting engaging online experiences</p></div>
-                <div class="arrow">&rarr;</div>
+                <div class="arrow">→</div>
                 <button class="expand-btn" onclick="toggleService(this)" aria-label="Toggle service details"><i class="fas fa-plus"></i></button>
                 <div class="service-content">
                     <ul>
@@ -99,7 +99,7 @@
             <div class="service-row" data-image="{{ url_for('static', filename='images/social.jpg') }}" data-title="Social Media" data-desc="Elevate your brand's online presence with strategic content and community management.">
                 <div class="number">02</div>
                 <div class="info"><h3>SOCIAL MEDIA</h3><p>Elevate your brand's online presence</p></div>
-                <div class="arrow">&rarr;</div>
+                <div class="arrow">→</div>
                 <button class="expand-btn" onclick="toggleService(this)" aria-label="Toggle service details"><i class="fas fa-plus"></i></button>
                 <div class="service-content">
                     <ul>
@@ -117,7 +117,7 @@
             <div class="service-row" data-image="{{ url_for('static', filename='images/CRM.webp') }}" data-title="CRM/ERP" data-desc="Streamline your processes and customer relationships with powerful automation tools.">
                 <div class="number">03</div>
                 <div class="info"><h3>CRM/ERP</h3><p>Streamline your processes and customer relationships</p></div>
-                <div class="arrow">&rarr;</div>
+                <div class="arrow">→</div>
                 <button class="expand-btn" onclick="toggleService(this)" aria-label="Toggle service details"><i class="fas fa-plus"></i></button>
                 <div class="service-content">
                     <ul>
@@ -135,7 +135,7 @@
             <div class="service-row" data-image="{{ url_for('static', filename='images/Ads.webp') }}" data-title="Ads Management" data-desc="Maximize your reach and ROI with data-driven advertising campaigns.">
                 <div class="number">04</div>
                 <div class="info"><h3>ADS MANAGEMENT</h3><p>Maximize your reach and ROI</p></div>
-                <div class="arrow">&rarr;</div>
+                <div class="arrow">→</div>
                 <button class="expand-btn" onclick="toggleService(this)" aria-label="Toggle service details"><i class="fas fa-plus"></i></button>
                 <div class="service-content">
                     <ul>
@@ -257,4 +257,84 @@
     <div class="box-desc" id="hoverDesc">Description</div>
 </div>
 
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function toggleService(btn) {
+    const row = btn.closest('.service-row');
+    const content = row.querySelector('.service-content');
+    const icon = btn.querySelector('i');
+    content.classList.toggle('open');
+    btn.classList.toggle('active');
+    icon.className = content.classList.contains('open') ? 'fas fa-minus' : 'fas fa-plus';
+}
+
+const hoverBox = document.getElementById('hoverBox');
+const hoverImage = document.getElementById('hoverImage');
+const hoverTitle = document.getElementById('hoverTitle');
+const hoverDesc = document.getElementById('hoverDesc');
+
+const serviceRows = document.querySelectorAll('.service-row');
+
+serviceRows.forEach(row => {
+    row.addEventListener('mouseenter', function(e) {
+        const img = this.dataset.image || 'https://placehold.co/400x300/e9edf2/4a5cf5?text=HIFI+Digital';
+        const title = this.dataset.title || 'Service';
+        const desc = this.dataset.desc || 'Creative digital solutions';
+
+        hoverImage.src = img;
+        hoverTitle.textContent = title;
+        hoverDesc.textContent = desc;
+        hoverBox.classList.add('visible');
+        updateHoverBoxPosition(e);
+    });
+
+    row.addEventListener('mousemove', function(e) {
+        updateHoverBoxPosition(e);
+    });
+
+    row.addEventListener('mouseleave', function() {
+        hoverBox.classList.remove('visible');
+    });
+});
+
+function updateHoverBoxPosition(e) {
+    const offsetX = 18;
+    const offsetY = 18;
+    let left = e.clientX + offsetX;
+    let top = e.clientY + offsetY;
+
+    const boxWidth = 200;
+    if (left + boxWidth > window.innerWidth - 10) {
+        left = e.clientX - boxWidth - offsetX;
+    }
+    const boxHeight = 200;
+    if (top + boxHeight > window.innerHeight - 10) {
+        top = e.clientY - boxHeight - offsetY;
+    }
+
+    hoverBox.style.left = left + 'px';
+    hoverBox.style.top = top + 'px';
+}
+
+const video = document.getElementById('heroVideo');
+if (video) {
+    video.play().catch(() => {});
+}
+
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+        if (href !== '#' && href.includes('#')) {
+            e.preventDefault();
+            const targetId = href.split('#')[1];
+            const target = document.getElementById(targetId);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+    });
+});
+</script>
 {% endblock %}

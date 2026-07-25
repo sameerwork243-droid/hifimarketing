@@ -1,0 +1,76 @@
+{% extends 'career_admin/base.html' %}
+{% block header_title %}Application Detail{% endblock %}
+{% block header_subtitle %}{{ app.first_name }} {{ app.last_name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+.app-detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.app-detail-card { background:var(--admin-card-bg); border:1px solid var(--admin-border); border-radius:14px; padding:24px; }
+.app-detail-card.full { grid-column:1/-1; }
+.app-detail-card h3 { font-size:14px; font-weight:700; color:var(--admin-text-primary); margin-bottom:16px; padding-bottom:10px; border-bottom:1px solid var(--admin-border); }
+.info-row { display:flex; padding:8px 0; border-bottom:1px solid rgba(0,0,0,0.04); }
+.info-row:last-child { border-bottom:none; }
+.info-label { width:120px; font-size:12px; font-weight:600; color:var(--admin-text-muted); flex-shrink:0; }
+.info-value { flex:1; font-size:13px; color:var(--admin-text-primary); word-break:break-word; }
+.status-select { padding:8px 14px; border:1px solid var(--admin-border); border-radius:8px; font-size:13px; background:var(--admin-body-bg); color:var(--admin-text-primary); }
+.btn-save-status { padding:8px 16px; background:#4a5cf5; color:#fff; border:none; border-radius:8px; cursor:pointer; font-weight:600; font-size:12px; }
+.btn-resume { display:inline-flex; align-items:center; gap:6px; padding:8px 16px; background:#e8edfe; color:#4a5cf5; border:none; border-radius:8px; cursor:pointer; font-weight:600; font-size:12px; text-decoration:none; }
+.btn-resume:hover { background:#d0d8fc; }
+.cover-letter-box { background:var(--admin-body-bg); border-radius:10px; padding:16px; font-size:13px; line-height:1.6; color:var(--admin-text-primary); white-space:pre-wrap; }
+.back-link { display:inline-flex; align-items:center; gap:6px; color:var(--admin-text-muted); text-decoration:none; font-size:13px; margin-bottom:16px; }
+.back-link:hover { color:#4a5cf5; }
+@media (max-width:768px) { .app-detail-grid { grid-template-columns:1fr; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<a href="/career/admin/applications" class="back-link"><i class="fas fa-arrow-left"></i> Back to Applications</a>
+
+<div class="app-detail-grid">
+  <div class="app-detail-card">
+    <h3>Applicant Information</h3>
+    <div class="info-row"><span class="info-label">Name</span><span class="info-value">{{ app.first_name }} {{ app.last_name }}</span></div>
+    <div class="info-row"><span class="info-label">Email</span><span class="info-value"><a href="mailto:{{ app.email }}">{{ app.email }}</a></span></div>
+    <div class="info-row"><span class="info-label">Phone</span><span class="info-value">{{ app.phone or '-' }}</span></div>
+    <div class="info-row"><span class="info-label">Address</span><span class="info-value">{{ app.address or '-' }}</span></div>
+    <div class="info-row"><span class="info-label">Portfolio</span><span class="info-value">{% if app.portfolio %}<a href="{{ app.portfolio }}" target="_blank">{{ app.portfolio }}</a>{% else %}-{% endif %}</span></div>
+  </div>
+
+  <div class="app-detail-card">
+    <h3>Job & Status</h3>
+    <div class="info-row"><span class="info-label">Job Title</span><span class="info-value">{{ app.job_title or 'N/A' }}</span></div>
+    <div class="info-row"><span class="info-label">Department</span><span class="info-value">{{ app.department or 'N/A' }}</span></div>
+    <div class="info-row"><span class="info-label">Location</span><span class="info-value">{{ app.location or 'N/A' }}</span></div>
+    <div class="info-row"><span class="info-label">Type</span><span class="info-value">{{ app.type or 'N/A' }}</span></div>
+    <div class="info-row"><span class="info-label">Applied</span><span class="info-value">{{ app.applied_at.strftime('%b %d, %Y at %I:%M %p') if app.applied_at else '-' }}</span></div>
+    <div class="info-row">
+      <span class="info-label">Status</span>
+      <span class="info-value">
+        <form method="POST" action="/career/admin/applications/{{ app.id }}/status" style="display:flex;gap:8px;align-items:center;">
+          <select name="status" class="status-select">
+            <option value="pending" {% if app.status == 'pending' %}selected{% endif %}>Pending</option>
+            <option value="reviewed" {% if app.status == 'reviewed' %}selected{% endif %}>Reviewed</option>
+            <option value="shortlisted" {% if app.status == 'shortlisted' %}selected{% endif %}>Shortlisted</option>
+            <option value="rejected" {% if app.status == 'rejected' %}selected{% endif %}>Rejected</option>
+            <option value="hired" {% if app.status == 'hired' %}selected{% endif %}>Hired</option>
+          </select>
+          <button type="submit" class="btn-save-status">Update</button>
+        </form>
+      </span>
+    </div>
+    {% if app.resume %}
+    <div class="info-row">
+      <span class="info-label">Resume</span>
+      <span class="info-value"><a href="/career/admin/applications/{{ app.id }}/resume" class="btn-resume"><i class="fas fa-download"></i> Download CV</a></span>
+    </div>
+    {% endif %}
+  </div>
+
+  {% if app.cover_letter %}
+  <div class="app-detail-card full">
+    <h3>Cover Letter</h3>
+    <div class="cover-letter-box">{{ app.cover_letter }}</div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

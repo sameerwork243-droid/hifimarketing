@@ -1,0 +1,300 @@
+{% extends 'base.html' %}
+
+{% block title %}HIFI Marketing & Technologies | Register{% endblock %}
+
+{% block extra_css %}
+<style>
+    .register-section {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 100px 20px 60px;
+        background: #f8fafc;
+    }
+    .register-box {
+        max-width: 440px;
+        width: 100%;
+        background: #ffffff;
+        padding: 40px 36px;
+        border-radius: 20px;
+        border: 1px solid #e9edf2;
+        box-shadow: 0 4px 30px rgba(0,0,0,0.05);
+    }
+    .register-box h1 {
+        font-size: 28px;
+        font-weight: 800;
+        color: #1a1c26;
+        margin-bottom: 4px;
+        text-align: center;
+    }
+    .register-box .sub-text {
+        text-align: center;
+        color: #3d4452;
+        font-size: 15px;
+        margin-bottom: 28px;
+    }
+    .register-box label {
+        display: block;
+        font-weight: 600;
+        font-size: 14px;
+        color: #1a1c26;
+        margin-bottom: 6px;
+    }
+    .register-box input[type="text"],
+    .register-box input[type="email"] {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #e9edf2;
+        border-radius: 10px;
+        font-size: 14px;
+        background: #f8fafc;
+        transition: 0.3s;
+        margin-bottom: 16px;
+    }
+    .register-box input:focus {
+        border-color: #4a5cf5;
+        outline: none;
+        background: #ffffff;
+        box-shadow: 0 0 0 4px rgba(74, 92, 245, 0.08);
+    }
+
+    /* ===== PASSWORD WRAPPER WITH EYE ICON ===== */
+    .password-wrapper {
+        position: relative;
+        width: 100%;
+        margin-bottom: 16px;
+    }
+
+    .password-wrapper input[type="password"],
+    .password-wrapper input[type="text"] {
+        width: 100%;
+        padding: 12px 50px 12px 16px !important;
+        border: 1px solid #e9edf2;
+        border-radius: 10px;
+        font-size: 14px;
+        background: #f8fafc;
+        transition: 0.3s;
+        margin-bottom: 0 !important;
+    }
+
+    .password-wrapper input:focus {
+        border-color: #4a5cf5;
+        outline: none;
+        background: #ffffff;
+        box-shadow: 0 0 0 4px rgba(74, 92, 245, 0.08);
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: transparent;
+        border: none;
+        color: #8a94a0;
+        font-size: 18px;
+        cursor: pointer;
+        padding: 4px 6px;
+        transition: 0.3s;
+        z-index: 2;
+    }
+
+    .toggle-password:hover {
+        color: #4a5cf5;
+        transform: translateY(-50%) scale(1.1);
+    }
+
+    .toggle-password:active {
+        transform: translateY(-50%) scale(0.9);
+    }
+
+    .register-box .btn-primary {
+        width: 100%;
+        padding: 14px;
+        font-size: 16px;
+        background: #4a5cf5;
+        color: #fff;
+        border: none;
+        border-radius: 40px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .register-box .btn-primary:hover {
+        background: #3a4be0;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 20px rgba(74, 92, 245, 0.2);
+    }
+    .register-box .error-msg {
+        background: #fee2e2;
+        color: #dc2626;
+        padding: 12px 16px;
+        border-radius: 10px;
+        font-size: 14px;
+        margin-bottom: 16px;
+        border-left: 4px solid #dc2626;
+    }
+    .register-box .success-msg {
+        background: #dcfce7;
+        color: #16a34a;
+        padding: 12px 16px;
+        border-radius: 10px;
+        font-size: 14px;
+        margin-bottom: 16px;
+        border-left: 4px solid #16a34a;
+    }
+    .register-box .login-link {
+        text-align: center;
+        margin-top: 16px;
+        font-size: 14px;
+        color: #3d4452;
+    }
+    .register-box .login-link a {
+        color: #4a5cf5;
+        font-weight: 600;
+        transition: 0.2s;
+    }
+    .register-box .login-link a:hover {
+        text-decoration: underline;
+    }
+
+    /* ===== DARK MODE ===== */
+    body.dark-mode .register-section {
+        background: #0b0d10;
+    }
+    body.dark-mode .register-box {
+        background: #14191f;
+        border-color: #1e242c;
+    }
+    body.dark-mode .register-box h1 {
+        color: #eaeef2;
+    }
+    body.dark-mode .register-box .sub-text {
+        color: #b0b8c5;
+    }
+    body.dark-mode .register-box label {
+        color: #eaeef2;
+    }
+    body.dark-mode .register-box input[type="text"],
+    body.dark-mode .register-box input[type="email"] {
+        background: #1e242c;
+        border-color: #2a3340;
+        color: #eaeef2;
+    }
+    body.dark-mode .register-box input:focus {
+        border-color: #4a5cf5;
+        background: #14191f;
+    }
+    body.dark-mode .password-wrapper input[type="password"],
+    body.dark-mode .password-wrapper input[type="text"] {
+        background: #1e242c;
+        border-color: #2a3340;
+        color: #eaeef2;
+    }
+    body.dark-mode .password-wrapper input:focus {
+        border-color: #4a5cf5;
+        background: #14191f;
+    }
+    body.dark-mode .register-box .login-link {
+        color: #b0b8c5;
+    }
+    body.dark-mode .toggle-password {
+        color: #6b7a8a;
+    }
+    body.dark-mode .toggle-password:hover {
+        color: #4a5cf5;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="register-section">
+    <div class="register-box">
+        <h1>Create Account</h1>
+        <p class="sub-text">Join HIFI and unlock exclusive features</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    {% if category == 'error' %}
+                        <div class="error-msg"><i class="fas fa-exclamation-circle"></i> {{ message }}</div>
+                    {% elif category == 'success' %}
+                        <div class="success-msg"><i class="fas fa-check-circle"></i> {{ message }}</div>
+                    {% else %}
+                        <div class="error-msg">{{ message }}</div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('public.register') }}">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="Choose a username" required />
+
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required />
+
+            <label for="password">Password</label>
+            <div class="password-wrapper">
+                <input type="password" id="password" name="password" placeholder="Create a password (min 6 chars)" required />
+                <button type="button" class="toggle-password" id="togglePassword1">
+                    <i class="fas fa-eye" id="eyeIcon1"></i>
+                </button>
+            </div>
+
+            <label for="confirm_password">Confirm Password</label>
+            <div class="password-wrapper">
+                <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm your password" required />
+                <button type="button" class="toggle-password" id="togglePassword2">
+                    <i class="fas fa-eye" id="eyeIcon2"></i>
+                </button>
+            </div>
+
+            <button type="submit" class="btn-primary"><i class="fas fa-user-plus"></i> Create Account</button>
+        </form>
+
+        <p class="login-link">Already have an account? <a href="{{ url_for('public.login') }}">Login here</a></p>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const passwordInput = document.getElementById('password');
+    const toggleBtn1 = document.getElementById('togglePassword1');
+    const eyeIcon1 = document.getElementById('eyeIcon1');
+
+    toggleBtn1.addEventListener('click', function() {
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            eyeIcon1.classList.remove('fa-eye');
+            eyeIcon1.classList.add('fa-eye-slash');
+            eyeIcon1.style.color = '#4a5cf5';
+        } else {
+            passwordInput.type = 'password';
+            eyeIcon1.classList.remove('fa-eye-slash');
+            eyeIcon1.classList.add('fa-eye');
+            eyeIcon1.style.color = '#8a94a0';
+        }
+    });
+
+    const confirmPasswordInput = document.getElementById('confirm_password');
+    const toggleBtn2 = document.getElementById('togglePassword2');
+    const eyeIcon2 = document.getElementById('eyeIcon2');
+
+    toggleBtn2.addEventListener('click', function() {
+        if (confirmPasswordInput.type === 'password') {
+            confirmPasswordInput.type = 'text';
+            eyeIcon2.classList.remove('fa-eye');
+            eyeIcon2.classList.add('fa-eye-slash');
+            eyeIcon2.style.color = '#4a5cf5';
+        } else {
+            confirmPasswordInput.type = 'password';
+            eyeIcon2.classList.remove('fa-eye-slash');
+            eyeIcon2.classList.add('fa-eye');
+            eyeIcon2.style.color = '#8a94a0';
+        }
+    });
+</script>
+{% endblock %}

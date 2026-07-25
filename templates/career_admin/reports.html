@@ -1,0 +1,125 @@
+{% extends 'career_admin/base.html' %}
+{% block header_title %}Reports & Analytics{% endblock %}
+{% block header_subtitle %}Overview of all recruitment activity{% endblock %}
+
+{% block extra_css %}
+<style>
+.report-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px; }
+.report-card { background:var(--admin-card-bg); border:1px solid var(--admin-border); border-radius:14px; padding:24px; }
+.report-card.full { grid-column:1/-1; }
+.report-card.half { grid-column:span 2; }
+.report-card h3 { font-size:13px; font-weight:700; color:var(--admin-text-muted); text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px; }
+.report-card .big-num { font-size:36px; font-weight:800; color:var(--admin-text-primary); }
+.report-card .sub-text { font-size:12px; color:var(--admin-text-muted); margin-top:2px; }
+.stat-row { display:flex; align-items:center; padding:10px 0; border-bottom:1px solid var(--admin-border); }
+.stat-row:last-child { border-bottom:none; }
+.stat-row .label { flex:1; font-size:13px; color:var(--admin-text-primary); font-weight:500; }
+.stat-row .bar-track { width:60%; height:8px; background:var(--admin-body-bg); border-radius:4px; overflow:hidden; margin:0 12px; }
+.stat-row .bar-fill { height:100%; border-radius:4px; transition:width .6s; }
+.stat-row .count { font-size:13px; font-weight:700; color:var(--admin-text-primary); min-width:30px; text-align:right; }
+.bar-colors { display:flex; gap:16px; flex-wrap:wrap; margin-top:12px; }
+.color-dot { display:inline-flex; align-items:center; gap:6px; font-size:12px; color:var(--admin-text-muted); }
+.color-dot i { font-size:8px; }
+.monthly-chart { display:flex; align-items:flex-end; gap:8px; height:120px; padding:10px 0; }
+.month-bar { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; }
+.month-bar .bar { width:100%; border-radius:4px 4px 0 0; min-height:4px; background:#4a5cf5; transition:height .6s; }
+.month-bar .mlabel { font-size:9px; color:var(--admin-text-muted); }
+@media (max-width:900px) { .report-grid { grid-template-columns:1fr 1fr; } .report-card.half { grid-column:1/-1; } }
+@media (max-width:600px) { .report-grid { grid-template-columns:1fr; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="report-grid">
+  <div class="report-card">
+    <h3>Total Jobs</h3>
+    <div class="big-num">{{ total_jobs }}</div>
+    <div class="sub-text">{{ active_jobs }} active</div>
+  </div>
+  <div class="report-card">
+    <h3>Total Applications</h3>
+    <div class="big-num">{{ total_apps }}</div>
+    <div class="sub-text">across all jobs</div>
+  </div>
+  <div class="report-card">
+    <h3>Messages</h3>
+    <div class="big-num">{{ total_messages }}</div>
+    <div class="sub-text">{{ unread_messages }} unread</div>
+  </div>
+  <div class="report-card">
+    <h3>Total Users</h3>
+    <div class="big-num">{{ total_users }}</div>
+    <div class="sub-text">registered accounts</div>
+  </div>
+</div>
+
+<div class="report-grid">
+  <div class="report-card half">
+    <h3>Applications by Status</h3>
+    {% if status_counts %}
+    {% set colors = {'pending':'#f59e0b','reviewed':'#3b82f6','shortlisted':'#10b981','rejected':'#ef4444','hired':'#8b5cf6'} %}
+    {% set labels = {'pending':'Pending','reviewed':'Reviewed','shortlisted':'Shortlisted','rejected':'Rejected','hired':'Hired'} %}
+    {% set max_count = status_counts|map(attribute='count')|max or 1 %}
+    {% for s in status_counts %}
+    <div class="stat-row">
+      <span class="label">{{ labels.get(s.status, s.status|capitalize) }}</span>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:{{ (s.count / max_count * 100)|round }}%;background:{{ colors.get(s.status, '#4a5cf5') }};"></div>
+      </div>
+      <span class="count">{{ s.count }}</span>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p style="color:var(--admin-text-muted);font-size:13px;">No applications yet.</p>
+    {% endif %}
+  </div>
+
+  <div class="report-card half">
+    <h3>Applications by Department</h3>
+    {% if dept_counts %}
+    {% set d_max = dept_counts|map(attribute='count')|max or 1 %}
+    {% for d in dept_counts %}
+    <div class="stat-row">
+      <span class="label">{{ d.department or 'Unassigned' }}</span>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:{{ (d.count / d_max * 100)|round }}%;background:#6366f1;"></div>
+      </div>
+      <span class="count">{{ d.count }}</span>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p style="color:var(--admin-text-muted);font-size:13px;">No department data.</p>
+    {% endif %}
+  </div>
+
+  <div class="report-card full">
+    <h3>Monthly Applications</h3>
+    {% if monthly_apps %}
+    {% set m_max = monthly_apps|map(attribute='count')|max or 1 %}
+    <div class="monthly-chart">
+      {% for m in monthly_apps %}
+      <div class="month-bar">
+        <div class="bar" style="height:{{ (m.count / m_max * 120)|round }}px;"></div>
+        <span class="mlabel">{{ m.month[5:7] }}/{{ m.month[2:4] }}</span>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p style="color:var(--admin-text-muted);font-size:13px;">No monthly data yet.</p>
+    {% endif %}
+  </div>
+
+  {% if recent_apps %}
+  <div class="report-card full">
+    <h3>Recent Applications</h3>
+    {% for app in recent_apps %}
+    <div class="stat-row">
+      <span class="label">{{ app.first_name }} {{ app.last_name }} — {{ app.job_title or 'N/A' }}</span>
+      <span style="font-size:12px;color:var(--admin-text-muted);">{{ app.applied_at.strftime('%b %d') if app.applied_at else '' }}</span>
+      <a href="/career/admin/applications/{{ app.id }}" style="color:#4a5cf5;font-size:12px;margin-left:12px;">View</a>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

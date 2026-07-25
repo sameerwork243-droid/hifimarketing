@@ -1,0 +1,156 @@
+{% extends 'career_admin/base.html' %}
+
+{% block stats %}
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon blue"><i class="fas fa-briefcase"></i></div>
+        <div class="stat-number">{{ stats.total_jobs }}</div>
+        <div class="stat-label">Total Jobs</div>
+        <span class="stat-change up"><i class="fas fa-arrow-up"></i> Active</span>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon green"><i class="fas fa-file-alt"></i></div>
+        <div class="stat-number">{{ stats.total_applications }}</div>
+        <div class="stat-label">Total Applications</div>
+        <span class="stat-change up"><i class="fas fa-arrow-up"></i> Received</span>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon orange"><i class="fas fa-clock"></i></div>
+        <div class="stat-number">{{ stats.pending_applications }}</div>
+        <div class="stat-label">Pending Review</div>
+        <span class="stat-change {% if stats.pending_applications > 0 %}up{% else %}down{% endif %}">
+            {% if stats.pending_applications > 0 %}<i class="fas fa-arrow-up"></i> Awaiting{% else %}<i class="fas fa-arrow-down"></i> All reviewed{% endif %}
+        </span>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon purple"><i class="fas fa-envelope"></i></div>
+        <div class="stat-number">{{ stats.unread_messages }}</div>
+        <div class="stat-label">Unread Messages</div>
+        <span class="stat-change {% if stats.unread_messages > 0 %}up{% else %}down{% endif %}">
+            {% if stats.unread_messages > 0 %}<i class="fas fa-arrow-up"></i> New{% else %}<i class="fas fa-check"></i> All read{% endif %}
+        </span>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="charts-grid">
+    <div class="chart-card">
+        <div class="chart-header">
+            <h3>Applications Overview</h3>
+            <a href="/career/admin/applications" class="chart-action">View all &rarr;</a>
+        </div>
+        <div class="status-bars">
+            {% set status_colors = {'pending': 'orange', 'reviewed': 'blue', 'shortlisted': 'green', 'rejected': 'red'} %}
+            {% set status_labels = {'pending': 'Pending', 'reviewed': 'Reviewed', 'shortlisted': 'Shortlisted', 'rejected': 'Rejected'} %}
+            {% set total = stats.total_applications | default(0) %}
+            {% if total == 0 %}{% set total = 1 %}{% endif %}
+            {% for key, label in status_labels.items() %}
+                {% set count = status_counts.get(key, 0) %}
+                {% set percentage = ((count / total) * 100) | round %}
+                {% set color = status_colors.get(key, 'blue') %}
+                <div class="status-bar-item">
+                    <span class="status-label">{{ label }}</span>
+                    <div class="status-track">
+                        <div class="status-fill {{ color }}" style="width: {{ percentage }}%;"></div>
+                    </div>
+                    <span class="status-count">{{ count }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="chart-card">
+        <div class="chart-header">
+            <h3>Quick Actions</h3>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+            <a href="/career/admin/jobs?action=add" style="display:flex;align-items:center;gap:12px;padding:14px 18px;background:#f8fafc;border-radius:12px;border:1px solid var(--admin-border);transition:var(--admin-transition);">
+                <i class="fas fa-plus-circle" style="color:#4a5cf5;font-size:20px;"></i>
+                <div>
+                    <div style="font-weight:600;font-size:14px;color:var(--admin-text-primary);">Post New Job</div>
+                    <div style="font-size:12px;color:var(--admin-text-muted);">Create a new job listing</div>
+                </div>
+            </a>
+            <a href="/career/admin/applications" style="display:flex;align-items:center;gap:12px;padding:14px 18px;background:#f8fafc;border-radius:12px;border:1px solid var(--admin-border);transition:var(--admin-transition);">
+                <i class="fas fa-users" style="color:#2e7d32;font-size:20px;"></i>
+                <div>
+                    <div style="font-weight:600;font-size:14px;color:var(--admin-text-primary);">View Applications</div>
+                    <div style="font-size:12px;color:var(--admin-text-muted);">Review pending applications</div>
+                </div>
+            </a>
+            <a href="/career/admin/messages" style="display:flex;align-items:center;gap:12px;padding:14px 18px;background:#f8fafc;border-radius:12px;border:1px solid var(--admin-border);transition:var(--admin-transition);">
+                <i class="fas fa-envelope" style="color:#e65100;font-size:20px;"></i>
+                <div>
+                    <div style="font-weight:600;font-size:14px;color:var(--admin-text-primary);">View Messages</div>
+                    <div style="font-size:12px;color:var(--admin-text-muted);">Check contact form messages</div>
+                </div>
+            </a>
+            <a href="/career/admin/reports" style="display:flex;align-items:center;gap:12px;padding:14px 18px;background:#f8fafc;border-radius:12px;border:1px solid var(--admin-border);transition:var(--admin-transition);">
+                <i class="fas fa-file-export" style="color:#e65100;font-size:20px;"></i>
+                <div>
+                    <div style="font-weight:600;font-size:14px;color:var(--admin-text-primary);">Export Reports</div>
+                    <div style="font-size:12px;color:var(--admin-text-muted);">Download application data</div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="recent-grid">
+    <div class="recent-card">
+        <div class="recent-header">
+            <h3>Recent Applications</h3>
+            <a href="/career/admin/applications">View all &rarr;</a>
+        </div>
+        {% if recent_applications and recent_applications | length > 0 %}
+            {% for app in recent_applications %}
+                <div class="recent-item">
+                    <div class="recent-icon blue"><i class="fas fa-user"></i></div>
+                    <div class="recent-content">
+                        <div class="recent-title">{{ app.name }}</div>
+                        <div class="recent-sub">
+                            Applied for: {{ app.job_title | default('N/A') }}
+                            {% if app.resume is defined and app.resume %}
+                                <br />
+                                <button onclick="previewResume('/static/uploads/{{ app.resume }}')" class="btn-resume" title="Preview Resume">
+                                    <i class="fas fa-eye"></i> Preview
+                                </button>
+                                <a href="/static/uploads/{{ app.resume }}" download class="btn-resume download" title="Download Resume">
+                                    <i class="fas fa-download"></i> Download
+                                </a>
+                            {% else %}
+                                <br />
+                                <span style="color:var(--admin-text-muted);font-size:11px;">No resume uploaded</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="recent-time">{{ app.applied_at | time_ago }}</div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p style="color:var(--admin-text-muted);text-align:center;padding:20px 0;">No applications yet</p>
+        {% endif %}
+    </div>
+
+    <div class="recent-card">
+        <div class="recent-header">
+            <h3>Recent Jobs</h3>
+            <a href="/career/admin/jobs">View all &rarr;</a>
+        </div>
+        {% if recent_jobs and recent_jobs | length > 0 %}
+            {% for job in recent_jobs %}
+                <div class="recent-item">
+                    <div class="recent-icon green"><i class="fas fa-briefcase"></i></div>
+                    <div class="recent-content">
+                        <div class="recent-title">{{ job.title }}</div>
+                        <div class="recent-sub">{{ job.location }} &middot; {{ job.type }}</div>
+                    </div>
+                    <div class="recent-time">{{ job.posted_date | time_ago }}</div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p style="color:var(--admin-text-muted);text-align:center;padding:20px 0;">No jobs posted yet</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

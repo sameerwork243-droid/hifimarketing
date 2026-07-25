@@ -1,0 +1,869 @@
+{% extends 'portal_base.html' %}
+
+{% set nav_links = [
+    {'label': 'Operations', 'icon': 'tachometer-alt', 'url': '/pm/dashboard?tab=operations', 'active': active_tab == 'operations'},
+    {'label': 'Deliverables', 'icon': 'check-square', 'url': '/pm/dashboard?tab=deliverables', 'active': active_tab == 'deliverables'},
+    {'label': 'Tickets', 'icon': 'headset', 'url': '/pm/dashboard?tab=tickets', 'active': active_tab == 'tickets'},
+    {'label': 'Verbal', 'icon': 'phone', 'url': '/pm/dashboard?tab=verbal', 'active': active_tab == 'verbal'},
+    {'label': 'Sync', 'icon': 'sync-alt', 'url': '/pm/dashboard?tab=sync', 'active': active_tab == 'sync'}
+] %}
+
+{% set sidebar_links = nav_links %}
+
+{% set banner_title = "PM Dashboard" %}
+{% set banner_subtitle = "Manage operations, deliverables, and client communications" %}
+{% set banner_badge = "PROJECT MANAGER" %}
+
+{% block content %}
+
+<div class="card">
+    <div class="card-header">
+        <h3><i class="fas fa-paperclip" style="color:var(--primary);"></i> Brand2Social Attachments</h3>
+        <button onclick="openModal('modal-upload-brand')" style="background:var(--primary);color:#fff;border:none;padding:6px 18px;border-radius:40px;font-size:11px;font-weight:600;cursor:pointer;transition:var(--transition);">
+            <i class="fas fa-upload"></i> Upload
+        </button>
+    </div>
+    <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">Upload brand2social analytics files for client to download.</p>
+    <div style="margin-bottom:12px;">
+        <label style="font-weight:600;font-size:12px;color:var(--text-secondary);display:block;margin-bottom:4px;">Select Client:</label>
+        <select id="attachment-client-select" onchange="loadClientAttachments(this.value)" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:#f8fafc;font-size:13px;">
+            <option value="">-- Select Client --</option>
+            {% for client in clients %}
+            <option value="{{ client.id }}"{% if selected_client_id == client.id %} selected{% endif %}>{{ client.name }} ({{ client.username }})</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div id="pm-attachments-list">
+        {% if pm_attachments %}
+            {% for att in pm_attachments %}
+            <div class="attachment-item" id="att-{{ att.id }}">
+                <div class="file-info">
+                    <div class="file-name"><i class="fas fa-file"></i> {{ att.file_name }}</div>
+                    <div class="file-meta">
+                        Uploaded: {{ att.created_at.strftime('%b %d, %Y %H:%M') if att.created_at else '' }} &bull;
+                        Size: {{ (att.file_size / 1024)|round(1) }} KB
+                        {% if att.description %} &bull; {{ att.description }}{% endif %}
+                    </div>
+                    <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">
+                        <i class="fas fa-user"></i> Uploaded by: {{ att.uploaded_by if att.uploaded_by else 'PM' }}
+                    </div>
+                </div>
+                <div class="file-actions">
+                    <button class="btn-download" onclick="downloadFile({{ att.id }})" title="Download"><i class="fas fa-download"></i></button>
+                    <button class="btn-delete" onclick="deleteAttachment({{ att.id }})" title="Delete"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state" id="empty-attachments" style="padding:20px;text-align:center;color:var(--text-muted);">
+                <i class="fas fa-file" style="font-size:28px;display:block;margin-bottom:6px;opacity:0.3;"></i>
+                <p style="font-size:12px;">No attachments uploaded yet.</p>
+                <p style="font-size:11px;">Select a client and upload brand2social files.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% if active_tab == 'operations' %}
+
+<div class="card">
+    <div class="card-header">
+        <h3><i class="fas fa-pen-tool" style="color:var(--primary);"></i> Project Manager Creative Desk</h3>
+        <span class="sub">All finance elements are secured and hidden</span>
+    </div>
+    <p style="font-size:13px;color:var(--text-secondary);">All finance elements, PKR invoicing, and billing registry records are secured and hidden from this interface.</p>
+</div>
+
+<div class="grid-2">
+    <div class="card">
+        <div class="card-header">
+            <h3><i class="fas fa-users" style="color:var(--primary);"></i> Client Overview</h3>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Package</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for client in clients %}
+                    <tr>
+                        <td>{{ client.id }}</td>
+                        <td style="font-weight:600;">{{ client.name }}</td>
+                        <td>{{ client.email }}</td>
+                        <td>{{ client.package_name if client.package_name else 'N/A' }}</td>
+                        <td><span class="status-badge {% if client.status == 'active' %}done{% else %}pending{% endif %}">{{ client.status if client.status else 'Active' }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h3><i class="fas fa-ticket-alt" style="color:var(--primary);"></i> Recent Tickets</h3>
+        </div>
+        {% if tickets %}
+            {% for ticket in tickets[:5] %}
+            <div class="task-item">
+                <div class="task-header">
+                    <span class="task-title">{{ ticket.title }}</span>
+                    <span class="status-badge {{ ticket.status.lower() }}">{{ ticket.status }}</span>
+                </div>
+                <div class="task-meta">
+                    <span><i class="fas fa-user"></i> {{ ticket.client_name }}</span>
+                    <span><i class="fas fa-tag"></i> {{ ticket.category if ticket.category else 'General' }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div style="text-align:center;padding:20px;color:var(--text-muted);">
+                <i class="fas fa-inbox" style="font-size:24px;display:block;margin-bottom:6px;opacity:0.3;"></i>
+                <p style="font-size:12px;">No open tickets</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3><i class="fas fa-tasks" style="color:var(--primary);"></i> Ongoing Client Add-on &amp; Custom Tasks</h3>
+        <span class="sub">Drag the slider to update task completion percentage</span>
+    </div>
+    <div class="grid-2">
+        {% if custom_tasks %}
+            {% for task in custom_tasks %}
+            <div class="task-item" style="border-color: {{ 'var(--primary)' if task.status == 'Awaiting Quote' else 'var(--border)' }};">
+                <div class="task-header">
+                    <span class="task-title">{{ task.title }}</span>
+                    <span class="status-badge {{ 'pending' if task.status == 'Awaiting Quote' else 'in-progress' }}">{{ task.status }}</span>
+                </div>
+                <div class="task-desc">{{ task.description }}</div>
+                <div class="task-meta">
+                    <span><i class="fas fa-tag"></i> {{ task.category }}</span>
+                    <span><i class="fas fa-user"></i> {{ task.client_name if task.client_name else 'Unknown' }}</span>
+                </div>
+                <div style="margin-top:8px;">
+                    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);">
+                        <span>Progress</span>
+                        <span id="progress-label-{{ task.id }}" style="font-weight:700;color:var(--text-primary);">{{ task.progress if task.progress else 0 }}%</span>
+                    </div>
+                    <input type="range" min="0" max="100" value="{{ task.progress if task.progress else 0 }}"
+                           oninput="updateTaskProgress({{ task.id }}, this.value)"
+                           id="progress-slider-{{ task.id }}">
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--text-muted);">
+                <i class="fas fa-inbox" style="font-size:30px;display:block;margin-bottom:8px;"></i>
+                <p style="font-size:13px;">No custom tasks available</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3><i class="fas fa-phone" style="color:var(--primary);"></i> Verbal Project Addition</h3>
+        <span class="sub">Client verbal requests over Zoom/WhatsApp</span>
+    </div>
+    <form onsubmit="addVerbalTask(event)" class="grid-2" style="gap:12px;">
+        <div>
+            <label style="font-weight:600;font-size:12px;color:var(--text-secondary);display:block;margin-bottom:4px;">Select Client</label>
+            <select id="verbal-client" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:#f8fafc;font-size:13px;">
+                {% for client in clients %}
+                <option value="{{ client.id }}">{{ client.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label style="font-weight:600;font-size:12px;color:var(--text-secondary);display:block;margin-bottom:4px;">Category</label>
+            <select id="verbal-category" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:#f8fafc;font-size:13px;">
+                <option value="Software & Web dev">Software & Web dev</option>
+                <option value="Design & Branding">Design & Branding</option>
+                <option value="Marketing & Ads">Marketing & Ads</option>
+                <option value="Content & Copy">Content & Copy</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+        <div>
+            <label style="font-weight:600;font-size:12px;color:var(--text-secondary);display:block;margin-bottom:4px;">Task Title</label>
+            <input type="text" id="verbal-title" required placeholder="e.g. Design 10 extra posts" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:#f8fafc;font-size:13px;">
+        </div>
+        <div>
+            <label style="font-weight:600;font-size:12px;color:var(--text-secondary);display:block;margin-bottom:4px;">Verbal Context</label>
+            <input type="text" id="verbal-desc" required placeholder="Client instructions..." style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:#f8fafc;font-size:13px;">
+        </div>
+        <div style="grid-column:1/-1;">
+            <button type="submit" style="width:100%;padding:10px;background:var(--primary);color:#fff;border:none;border-radius:40px;font-weight:700;font-size:13px;cursor:pointer;transition:var(--transition);">
+                <i class="fas fa-paper-plane"></i> Post to Finance Invoice Pipeline
+            </button>
+        </div>
+    </form>
+</div>
+
+{% elif active_tab == 'deliverables' %}
+
+<section-title>Deliverables</section-title>
+
+<div class="card">
+    <div class="card-header">
+        <h3><i class="fas fa-plus-circle" style="color:var(--primary);"></i> Add Deliverable Target</h3>
+        <span class="sub">Publish to client board</span>
+    </div>
+    <form onsubmit="addDeliverable(event)" class="grid-2" style="gap:12px;">
+        <div>
+            <label style="font-weight:600;font-size:12px;color:var(--text-secondary);display:block;margin-bottom:4px;">Select Client</label>
+            <select id="dl-client" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:#f8fafc;font-size:13px;">
+                {% for client in clients %}
+                <option value="{{ client.id }}">{{ client.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label style="font-weight:600;font-size:12px;color:var(--text-secondary);display:block;margin-bottom:4px;">Deliverable Title</label>
+            <input type="text" id="dl-name" required placeholder="e.g. Schedule UGC Blog Copy" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:#f8fafc;font-size:13px;">
+        </div>
+        <div>
+            <label style="font-weight:600;font-size:12px;color:var(--text-secondary);display:block;margin-bottom:4px;">Category Type</label>
+            <select id="dl-type" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:#f8fafc;font-size:13px;">
+                <option value="Elegant Design">Elegant Design</option>
+                <option value="SEO Blog">SEO Blog</option>
+                <option value="Paid Ads">Paid Ads</option>
+                <option value="Engagement">Engagement</option>
+                <option value="Setup">Setup</option>
+                <option value="Development">Development</option>
+            </select>
+        </div>
+        <div>
+            <label style="font-weight:600;font-size:12px;color:var(--text-secondary);display:block;margin-bottom:4px;">Assignee</label>
+            <input type="text" id="dl-assignee" required placeholder="Zack Media" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:#f8fafc;font-size:13px;">
+        </div>
+        <div>
+            <label style="font-weight:600;font-size:12px;color:var(--text-secondary);display:block;margin-bottom:4px;">Due Date</label>
+            <input type="date" id="dl-date" required style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:#f8fafc;font-size:13px;">
+        </div>
+        <div style="grid-column:1/-1;">
+            <button type="submit" style="width:100%;padding:10px;background:var(--primary);color:#fff;border:none;border-radius:40px;font-weight:700;font-size:13px;cursor:pointer;transition:var(--transition);">
+                <i class="fas fa-check-circle"></i> Publish Deliverable
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3><i class="fas fa-list-check" style="color:var(--primary);"></i> Active Timeline Targets Board</h3>
+        <span class="sub">Track all deliverables</span>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Client</th>
+                    <th>Task</th>
+                    <th>Type</th>
+                    <th>Assigned To</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th style="text-align:right;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if deliverables %}
+                    {% for d in deliverables %}
+                    <tr>
+                        <td>{{ d.client_name }}</td>
+                        <td style="font-weight:700;color:var(--text-primary);">{{ d.name }}</td>
+                        <td><span style="padding:2px 10px;background:#f8fafc;border-radius:12px;font-size:10px;font-weight:600;">{{ d.type }}</span></td>
+                        <td>{{ d.assigned_to }}</td>
+                        <td>{{ d.due_date }}</td>
+                        <td>
+                            <select onchange="updateDeliverableStatus({{ d.id }}, this.value)"
+                                    class="status-select" style="background:{{ '#e8f5e9' if d.status == 'Done' else ('#e8edfe' if d.status == 'In Progress' else '#f1f5f9') }};color:{{ '#065f46' if d.status == 'Done' else ('#1a3a8a' if d.status == 'In Progress' else '#475569') }};">
+                                <option value="To Do"{% if d.status == 'To Do' %} selected{% endif %}>To Do</option>
+                                <option value="In Progress"{% if d.status == 'In Progress' %} selected{% endif %}>In Progress</option>
+                                <option value="Done"{% if d.status == 'Done' %} selected{% endif %}>Done</option>
+                            </select>
+                        </td>
+                        <td style="text-align:right;">
+                            <button onclick="deleteDeliverable({{ d.id }})" style="background:transparent;border:none;color:#dc3545;cursor:pointer;padding:4px 8px;border-radius:6px;transition:var(--transition);" onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='transparent'">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr><td colspan="7" style="text-align:center;padding:30px;color:var(--text-muted);">No deliverables available</td></tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% elif active_tab == 'tickets' %}
+
+<section-title>Support Tickets</section-title>
+
+<div class="card">
+    <div class="card-header">
+        <h3><i class="fas fa-headset" style="color:var(--primary);"></i> Client Action Requests &amp; Tickets</h3>
+        <span class="sub">Review task scopes and provide response</span>
+    </div>
+    {% if tickets %}
+        {% for t in tickets %}
+        <div style="padding:16px;border:1px solid {{ '#fee2e2' if t.status == 'Open' else '#e8f5e9' }};border-radius:10px;margin-bottom:12px;background:{{ '#fef2f2' if t.status == 'Open' else '#f0fdf4' }};">
+            <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+                <div style="flex:1;">
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:4px;">
+                        <span class="status-badge {{ 'open' if t.status == 'Open' else 'resolved' }}">{{ t.status }}</span>
+                        <span style="font-size:10px;font-weight:600;color:var(--text-muted);">{{ t.category if t.category else 'General' }}</span>
+                        <span style="font-size:10px;color:var(--text-muted);">Priority: {{ t.priority if t.priority else 'Medium' }}</span>
+                        <span style="font-size:10px;color:var(--text-muted);">Client: {{ t.client_name }}</span>
+                    </div>
+                    <div style="font-weight:700;color:var(--text-primary);font-size:14px;">{{ t.title }}</div>
+                    <div style="font-size:12px;color:var(--text-secondary);margin-top:3px;">{{ t.description }}</div>
+                    {% if t.admin_notes %}
+                    <div style="margin-top:6px;padding:8px 12px;background:#e8edfe;border-radius:8px;font-size:12px;color:#1a3a8a;">
+                        <i class="fas fa-reply"></i> {{ t.admin_notes }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div style="display:flex;flex-direction:column;gap:6px;min-width:120px;">
+                    {% if t.status == 'Open' %}
+                    <button onclick="resolveTicket({{ t.id }})" style="padding:6px 14px;background:#10b981;color:#fff;border:none;border-radius:40px;font-size:10px;font-weight:600;cursor:pointer;transition:var(--transition);">
+                        <i class="fas fa-check"></i> Resolve
+                    </button>
+                    {% else %}
+                    <span style="padding:6px 14px;background:#f1f5f9;color:var(--text-muted);border-radius:40px;font-size:10px;font-weight:600;text-align:center;">Resolved &#10003;</span>
+                    {% endif %}
+                    <button onclick="openNoteModal({{ t.id }}, '{{ t.admin_notes if t.admin_notes else '' }}')" style="padding:6px 14px;background:var(--primary);color:#fff;border:none;border-radius:40px;font-size:10px;font-weight:600;cursor:pointer;transition:var(--transition);">
+                        <i class="fas fa-reply"></i> Reply Note
+                    </button>
+                </div>
+            </div>
+            <div style="font-size:10px;color:var(--text-muted);margin-top:6px;">Submitted: {{ t.created_at.strftime('%Y-%m-%d') if t.created_at else '' }}</div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div style="text-align:center;padding:30px;color:var(--text-muted);">
+            <i class="fas fa-inbox" style="font-size:30px;display:block;margin-bottom:8px;"></i>
+            <p style="font-size:13px;">No tickets available</p>
+        </div>
+    {% endif %}
+</div>
+
+{% elif active_tab == 'verbal' %}
+
+<section-title>Verbal Tasks</section-title>
+
+<div class="card">
+    <div class="card-header">
+        <h3><i class="fas fa-list" style="color:var(--primary);"></i> Verbal Requests Log</h3>
+        <span class="sub">Monitor verbal tasks and generate invoices</span>
+    </div>
+    {% set all_verbal = [] %}
+    {% if custom_tasks %}
+        {% for t in custom_tasks if t.category == 'PM Verbal Add' %}
+            {% set all_verbal = all_verbal + [t] %}
+        {% endfor %}
+    {% endif %}
+    {% if verbal_tasks %}
+        {% for t in verbal_tasks %}
+            {% set all_verbal = all_verbal + [t] %}
+        {% endfor %}
+    {% endif %}
+    {% if all_verbal %}
+        {% for task in all_verbal %}
+        <div style="padding:14px 16px;border:1px solid var(--border);border-radius:10px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+            <div>
+                <div style="font-weight:700;color:var(--text-primary);font-size:14px;">{{ task.title }}</div>
+                <div style="font-size:12px;color:var(--text-secondary);">{{ task.description if task.description else '' }}</div>
+                <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap;">
+                    <span style="font-size:10px;color:var(--text-muted);">Client: {{ task.client_name if task.client_name else 'N/A' }}</span>
+                    <span style="font-size:10px;color:var(--text-muted);">Category: {{ task.category if task.category else 'General' }}</span>
+                    <span class="status-badge {{ 'in-progress' if task.status == 'In Progress' else 'done' }}">{{ task.status }}</span>
+                    {% if task.invoice_generated %}
+                    <span style="font-size:10px;color:#10b981;font-weight:600;"><i class="fas fa-check-circle"></i> Invoice Generated</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% if not task.invoice_generated %}
+            <button onclick="openInvoiceModal({{ task.client_id if task.client_id else 0 }}, {{ task.id if task.id else 0 }}, '{{ task.title }}')" style="padding:6px 16px;background:var(--primary);color:#fff;border:none;border-radius:40px;font-size:11px;font-weight:600;cursor:pointer;transition:var(--transition);">
+                <i class="fas fa-file-invoice"></i> Generate Invoice
+            </button>
+            {% endif %}
+        </div>
+        {% endfor %}
+    {% else %}
+        <div style="text-align:center;padding:30px;color:var(--text-muted);">
+            <i class="fas fa-phone" style="font-size:30px;display:block;margin-bottom:8px;"></i>
+            <p style="font-size:13px;">No verbal requests available</p>
+        </div>
+    {% endif %}
+</div>
+
+{% elif active_tab == 'sync' %}
+
+<section-title>Social Progress Sync</section-title>
+
+<div class="card">
+    <div class="card-header">
+        <h3><i class="fas fa-sliders-h" style="color:var(--primary);"></i> Social Progress Counters</h3>
+        <button onclick="syncAllProgress()" style="padding:6px 16px;background:var(--primary);color:#fff;border:none;border-radius:40px;font-size:11px;font-weight:600;cursor:pointer;transition:var(--transition);">
+            <i class="fas fa-sync"></i> Sync All
+        </button>
+    </div>
+    {% for client in clients %}
+    {% set progress = social_progress[client.id] if social_progress and client.id in social_progress else {'postsCompleted': 0, 'storiesCompleted': 0, 'totalLikes': 0, 'followersGained': 0} %}
+    {% set posts_limit = 20 %}
+    {% set stories_limit = 25 %}
+    {% for pkg in packages %}
+        {% if pkg.id == client.active_package_id %}
+            {% set posts_limit = pkg.posts_limit if pkg.posts_limit else 20 %}
+            {% set stories_limit = pkg.stories_limit if pkg.stories_limit else 25 %}
+        {% endif %}
+    {% endfor %}
+    <div style="border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px;background:#fafbfc;">
+        <h4 style="font-weight:700;color:var(--text-primary);font-size:14px;margin-bottom:10px;">{{ client.name }} ({{ client.username }})</h4>
+        <div class="grid-2" style="gap:12px;">
+            <div>
+                <label style="font-size:11px;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:2px;">Feed Posts Completed</label>
+                <span style="font-weight:700;font-size:14px;" id="posts-display-{{ client.id }}">{{ progress.postsCompleted }} / {{ posts_limit }}</span>
+                <input type="range" id="sync-posts-{{ client.id }}" min="0" max="{{ posts_limit }}" value="{{ progress.postsCompleted }}"
+                       oninput="updateProgressDisplay('{{ client.id }}', 'posts', this.value, {{ posts_limit }})">
+            </div>
+            <div>
+                <label style="font-size:11px;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:2px;">Stories Completed</label>
+                <span style="font-weight:700;font-size:14px;" id="stories-display-{{ client.id }}">{{ progress.storiesCompleted }} / {{ stories_limit }}</span>
+                <input type="range" id="sync-stories-{{ client.id }}" min="0" max="{{ stories_limit }}" value="{{ progress.storiesCompleted }}"
+                       oninput="updateProgressDisplay('{{ client.id }}', 'stories', this.value, {{ stories_limit }})">
+            </div>
+            <div>
+                <label style="font-size:11px;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:2px;">Total Likes</label>
+                <span style="font-weight:700;font-size:14px;" id="likes-display-{{ client.id }}">{{ '{:,}'.format(progress.totalLikes) }}</span>
+                <input type="range" id="sync-likes-{{ client.id }}" min="0" max="20000" value="{{ progress.totalLikes }}"
+                       oninput="document.getElementById('likes-display-{{ client.id }}').textContent = Number(this.value).toLocaleString()">
+            </div>
+            <div>
+                <label style="font-size:11px;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:2px;">Followers Gained</label>
+                <span style="font-weight:700;font-size:14px;" id="followers-display-{{ client.id }}">{{ '{:,}'.format(progress.followersGained) }}</span>
+                <input type="range" id="sync-followers-{{ client.id }}" min="0" max="5000" value="{{ progress.followersGained }}"
+                       oninput="document.getElementById('followers-display-{{ client.id }}').textContent = Number(this.value).toLocaleString()">
+            </div>
+        </div>
+        <button onclick="saveClientProgress({{ client.id }})" style="margin-top:10px;padding:6px 18px;background:var(--primary);color:#fff;border:none;border-radius:40px;font-size:11px;font-weight:600;cursor:pointer;transition:var(--transition);">
+            <i class="fas fa-save"></i> Save Progress
+        </button>
+    </div>
+    {% endfor %}
+    <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);text-align:center;font-size:11px;color:var(--text-muted);">
+        Changes will be synced instantly to the client dashboard
+    </div>
+</div>
+
+{% endif %}
+
+{% endblock %}
+
+{% block modals %}
+
+<div class="modal-overlay" id="modal-upload-brand">
+    <div class="modal">
+        <button class="modal-close" onclick="closeModal('modal-upload-brand')"><i class="fas fa-times"></i></button>
+        <h3>Upload Brand2Social File</h3>
+        <p class="modal-sub">Upload analytics files for client to download.</p>
+        <form id="upload-brand-form" onsubmit="uploadBrandFile(event)" enctype="multipart/form-data">
+            <div class="form-group" style="margin-bottom:12px;">
+                <label>Select Client *</label>
+                <select id="brand-client-id" name="brand-client-id" required style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:#f8fafc;font-size:13px;">
+                    <option value="">-- Select Client --</option>
+                    {% for client in clients %}
+                    <option value="{{ client.id }}">{{ client.name }} ({{ client.username }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group" style="margin-bottom:12px;">
+                <label>Select File (PDF, CSV, XLSX) *</label>
+                <div style="position:relative;overflow:hidden;display:inline-block;width:100%;">
+                    <button type="button" onclick="document.getElementById('brand-upload-file').click();"
+                            style="width:100%;padding:12px 14px;background:#f0f3ff;border:2px dashed var(--border);border-radius:8px;color:var(--primary);font-weight:600;font-size:13px;cursor:pointer;transition:var(--transition);">
+                        <i class="fas fa-cloud-upload-alt"></i> Choose File
+                    </button>
+                    <input type="file" id="brand-upload-file" name="brand-upload-file"
+                           required accept=".pdf,.csv,.xlsx,.xls"
+                           style="position:absolute;left:0;top:0;opacity:0;width:100%;height:100%;cursor:pointer;">
+                </div>
+                <div id="file-name-display" style="font-size:11px;color:var(--text-muted);margin-top:4px;padding:6px 10px;background:#f8fafc;border-radius:4px;transition:var(--transition);">
+                    No file selected
+                </div>
+            </div>
+            <div class="form-group" style="margin-bottom:12px;">
+                <label>File Description (Optional)</label>
+                <input type="text" id="brand-file-desc" name="brand-file-desc" placeholder="e.g. Monthly Report - June 2024" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:#f8fafc;font-size:13px;">
+            </div>
+            <button type="submit" class="btn-submit"><i class="fas fa-upload"></i> Upload File</button>
+        </form>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modal-note">
+    <div class="modal">
+        <button class="modal-close" onclick="closeModal('modal-note')"><i class="fas fa-times"></i></button>
+        <h3>Add Reply Note</h3>
+        <p class="modal-sub">Provide response commentary to the client.</p>
+        <form onsubmit="saveNoteFromModal(event)">
+            <input type="hidden" id="note-req-id">
+            <label>Your Reply</label>
+            <textarea id="note-reply-text" rows="4" required placeholder="Enter your response..."></textarea>
+            <button type="submit" class="btn-submit"><i class="fas fa-save"></i> Save Reply Note</button>
+        </form>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modal-invoice">
+    <div class="modal">
+        <button class="modal-close" onclick="closeModal('modal-invoice')"><i class="fas fa-times"></i></button>
+        <h3>Generate Invoice</h3>
+        <p class="modal-sub">Generate invoice for verbal task.</p>
+        <form onsubmit="generateInvoiceFromModal(event)">
+            <input type="hidden" id="invoice-client-id">
+            <input type="hidden" id="invoice-task-id">
+            <label>Amount (PKR)</label>
+            <input type="number" id="invoice-amount" required placeholder="e.g. 25000">
+            <label>Description</label>
+            <textarea id="invoice-desc" rows="2" required placeholder="Invoice description..."></textarea>
+            <button type="submit" class="btn-submit"><i class="fas fa-file-invoice"></i> Generate Invoice</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function loadClientAttachments(clientId) {
+    var list = document.getElementById('pm-attachments-list');
+    if (!clientId) {
+        list.innerHTML = '<div class="empty-state" style="padding:20px;text-align:center;color:var(--text-muted);"><i class="fas fa-file" style="font-size:28px;display:block;margin-bottom:6px;opacity:0.3;"></i><p style="font-size:12px;">Select a client to view attachments.</p></div>';
+        return;
+    }
+    var formData = new FormData();
+    formData.append('ajax_action', 'get_client_attachments');
+    formData.append('client_id', clientId);
+    fetch(window.location.href, { method: 'POST', body: formData })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.success && data.attachments && data.attachments.length > 0) {
+            var html = '';
+            data.attachments.forEach(function(att) {
+                html += '<div class="attachment-item" id="att-' + att.id + '">' +
+                    '<div class="file-info">' +
+                    '<div class="file-name"><i class="fas fa-file"></i> ' + att.file_name + '</div>' +
+                    '<div class="file-meta">Uploaded: ' + (att.created_at || '') + ' &bull; Size: ' + Math.round((att.file_size || 0) / 1024 * 10) / 10 + ' KB' +
+                    (att.description ? ' &bull; ' + att.description : '') + '</div>' +
+                    '<div style="font-size:10px;color:var(--text-muted);margin-top:2px;"><i class="fas fa-user"></i> Uploaded by: ' + (att.uploaded_by || 'PM') + '</div>' +
+                    '</div>' +
+                    '<div class="file-actions">' +
+                    '<button class="btn-download" onclick="downloadFile(' + att.id + ')" title="Download"><i class="fas fa-download"></i></button>' +
+                    '<button class="btn-delete" onclick="deleteAttachment(' + att.id + ')" title="Delete"><i class="fas fa-trash"></i></button>' +
+                    '</div></div>';
+            });
+            list.innerHTML = html;
+        } else {
+            list.innerHTML = '<div class="empty-state" style="padding:20px;text-align:center;color:var(--text-muted);"><i class="fas fa-file" style="font-size:28px;display:block;margin-bottom:6px;opacity:0.3;"></i><p style="font-size:12px;">No attachments for this client.</p></div>';
+        }
+    })
+    .catch(function() {
+        showToast('Error loading attachments', 'error');
+    });
+}
+
+function updateTaskProgress(taskId, value) {
+    var label = document.getElementById('progress-label-' + taskId);
+    if (label) label.textContent = value + '%';
+    var formData = new FormData();
+    formData.append('ajax_action', 'update_task_progress');
+    formData.append('task_id', taskId);
+    formData.append('progress', value);
+    fetch(window.location.href, { method: 'POST', body: formData })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (!data.success) showToast('Error updating progress: ' + data.message, 'error');
+    })
+    .catch(function() {});
+}
+
+function updateDeliverableStatus(deliverableId, status) {
+    var formData = new FormData();
+    formData.append('ajax_action', 'update_deliverable_status');
+    formData.append('deliverable_id', deliverableId);
+    formData.append('status', status);
+    fetch(window.location.href, { method: 'POST', body: formData })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.success) {
+            showToast('Status updated to "' + status + '"');
+            setTimeout(function() { location.reload(); }, 1000);
+        } else {
+            showToast('Error: ' + data.message, 'error');
+        }
+    })
+    .catch(function() { showToast('Error updating status', 'error'); });
+}
+
+function deleteDeliverable(deliverableId) {
+    if (confirm('Are you sure you want to delete this deliverable?')) {
+        var formData = new FormData();
+        formData.append('ajax_action', 'delete_deliverable');
+        formData.append('deliverable_id', deliverableId);
+        fetch(window.location.href, { method: 'POST', body: formData })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.success) {
+                showToast('Deliverable deleted successfully');
+                setTimeout(function() { location.reload(); }, 1000);
+            } else {
+                showToast('Error: ' + data.message, 'error');
+            }
+        })
+        .catch(function() { showToast('Error deleting deliverable', 'error'); });
+    }
+}
+
+function addDeliverable(e) {
+    e.preventDefault();
+    var formData = new FormData();
+    formData.append('ajax_action', 'add_deliverable');
+    formData.append('client_id', document.getElementById('dl-client').value);
+    formData.append('name', document.getElementById('dl-name').value);
+    formData.append('type', document.getElementById('dl-type').value);
+    formData.append('assigned_to', document.getElementById('dl-assignee').value);
+    formData.append('due_date', document.getElementById('dl-date').value);
+    fetch(window.location.href, { method: 'POST', body: formData })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.success) {
+            showToast('Deliverable added successfully');
+            setTimeout(function() { location.reload(); }, 1000);
+        } else {
+            showToast('Error: ' + data.message, 'error');
+        }
+    })
+    .catch(function() { showToast('Error adding deliverable', 'error'); });
+}
+
+function resolveTicket(ticketId) {
+    if (!confirm('Resolve this ticket?')) return;
+    var formData = new FormData();
+    formData.append('ajax_action', 'resolve_ticket');
+    formData.append('ticket_id', ticketId);
+    fetch(window.location.href, { method: 'POST', body: formData })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.success) {
+            showToast('Ticket resolved successfully');
+            setTimeout(function() { location.reload(); }, 1000);
+        } else {
+            showToast('Error: ' + data.message, 'error');
+        }
+    })
+    .catch(function() { showToast('Error resolving ticket', 'error'); });
+}
+
+function openNoteModal(ticketId, currentNote) {
+    document.getElementById('note-req-id').value = ticketId;
+    document.getElementById('note-reply-text').value = currentNote || '';
+    openModal('modal-note');
+}
+
+function saveNoteFromModal(e) {
+    e.preventDefault();
+    var ticketId = document.getElementById('note-req-id').value;
+    var note = document.getElementById('note-reply-text').value;
+    var formData = new FormData();
+    formData.append('ajax_action', 'add_reply_note');
+    formData.append('ticket_id', ticketId);
+    formData.append('note', note);
+    fetch(window.location.href, { method: 'POST', body: formData })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.success) {
+            showToast('Reply note added successfully');
+            setTimeout(function() { location.reload(); }, 1000);
+        } else {
+            showToast('Error: ' + data.message, 'error');
+        }
+    })
+    .catch(function() { showToast('Error saving note', 'error'); });
+}
+
+function addVerbalTask(e) {
+    e.preventDefault();
+    var clientId = (document.getElementById('verbal-client') ? document.getElementById('verbal-client').value : (document.getElementById('modal-verbal-client') ? document.getElementById('modal-verbal-client').value : 0));
+    var category = (document.getElementById('verbal-category') ? document.getElementById('verbal-category').value : (document.getElementById('modal-verbal-category') ? document.getElementById('modal-verbal-category').value : 'Other'));
+    var title = (document.getElementById('verbal-title') ? document.getElementById('verbal-title').value : (document.getElementById('modal-verbal-title') ? document.getElementById('modal-verbal-title').value : ''));
+    var desc = (document.getElementById('verbal-desc') ? document.getElementById('verbal-desc').value : (document.getElementById('modal-verbal-desc') ? document.getElementById('modal-verbal-desc').value : ''));
+    var formData = new FormData();
+    formData.append('ajax_action', 'add_verbal_task');
+    formData.append('client_id', clientId);
+    formData.append('title', title);
+    formData.append('category', category);
+    formData.append('description', desc);
+    fetch(window.location.href, { method: 'POST', body: formData })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.success) {
+            showToast('Verbal task added successfully');
+            setTimeout(function() { location.reload(); }, 1000);
+        } else {
+            showToast('Error: ' + data.message, 'error');
+        }
+    })
+    .catch(function() { showToast('Error adding verbal task', 'error'); });
+}
+
+function openInvoiceModal(clientId, taskId, title) {
+    document.getElementById('invoice-client-id').value = clientId;
+    document.getElementById('invoice-task-id').value = taskId;
+    document.getElementById('invoice-desc').value = 'Invoice for: ' + title;
+    openModal('modal-invoice');
+}
+
+function generateInvoiceFromModal(e) {
+    e.preventDefault();
+    var formData = new FormData();
+    formData.append('ajax_action', 'generate_invoice');
+    formData.append('client_id', document.getElementById('invoice-client-id').value);
+    formData.append('task_id', document.getElementById('invoice-task-id').value);
+    formData.append('amount', document.getElementById('invoice-amount').value);
+    formData.append('description', document.getElementById('invoice-desc').value);
+    fetch(window.location.href, { method: 'POST', body: formData })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.success) {
+            showToast('Invoice ' + (data.invoice_number || '') + ' generated successfully');
+            setTimeout(function() { location.reload(); }, 1000);
+        } else {
+            showToast('Error: ' + data.message, 'error');
+        }
+    })
+    .catch(function() { showToast('Error generating invoice', 'error'); });
+}
+
+function uploadBrandFile(e) {
+    e.preventDefault();
+    var fileInput = document.getElementById('brand-upload-file');
+    if (!fileInput.files || !fileInput.files[0]) {
+        showToast('Please select a file', 'warning');
+        return;
+    }
+    var formData = new FormData();
+    formData.append('ajax_action', 'upload_brand_file');
+    formData.append('client_id', document.getElementById('brand-client-id').value);
+    formData.append('file', fileInput.files[0]);
+    formData.append('description', document.getElementById('brand-file-desc').value);
+    fetch(window.location.href, { method: 'POST', body: formData })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.success) {
+            showToast('File uploaded successfully');
+            setTimeout(function() { location.reload(); }, 1000);
+        } else {
+            showToast('Error: ' + data.message, 'error');
+        }
+    })
+    .catch(function() { showToast('Error uploading file', 'error'); });
+}
+
+function deleteAttachment(docId) {
+    if (!confirm('Delete this attachment?')) return;
+    var formData = new FormData();
+    formData.append('ajax_action', 'delete_attachment');
+    formData.append('doc_id', docId);
+    fetch(window.location.href, { method: 'POST', body: formData })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.success) {
+            var el = document.getElementById('att-' + docId);
+            if (el) el.remove();
+            showToast('Attachment deleted successfully');
+        } else {
+            showToast('Error: ' + data.message, 'error');
+        }
+    })
+    .catch(function() { showToast('Error deleting attachment', 'error'); });
+}
+
+function downloadFile(docId) {
+    window.location.href = 'download.php?id=' + docId;
+}
+
+function updateProgressDisplay(clientId, field, value, max) {
+    var display = document.getElementById(field + '-display-' + clientId);
+    if (display) display.textContent = value + ' / ' + max;
+}
+
+function saveClientProgress(clientId) {
+    var posts = document.getElementById('sync-posts-' + clientId).value;
+    var stories = document.getElementById('sync-stories-' + clientId).value;
+    var likes = document.getElementById('sync-likes-' + clientId).value;
+    var followers = document.getElementById('sync-followers-' + clientId).value;
+    var formData = new FormData();
+    formData.append('ajax_action', 'update_social_progress');
+    formData.append('client_id', clientId);
+    formData.append('posts', posts);
+    formData.append('stories', stories);
+    formData.append('likes', likes);
+    formData.append('followers', followers);
+    fetch(window.location.href, { method: 'POST', body: formData })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.success) {
+            showToast('Social progress saved for client #' + clientId);
+        } else {
+            showToast('Error: ' + data.message, 'error');
+        }
+    })
+    .catch(function() { showToast('Error saving progress', 'error'); });
+}
+
+function syncAllProgress() {
+    var clients = document.querySelectorAll('[id^="sync-posts-"]');
+    var promises = [];
+    clients.forEach(function(el) {
+        var cid = el.id.replace('sync-posts-', '');
+        if (cid) {
+            var posts = document.getElementById('sync-posts-' + cid).value;
+            var stories = document.getElementById('sync-stories-' + cid).value;
+            var likes = document.getElementById('sync-likes-' + cid).value;
+            var followers = document.getElementById('sync-followers-' + cid).value;
+            var formData = new FormData();
+            formData.append('ajax_action', 'update_social_progress');
+            formData.append('client_id', cid);
+            formData.append('posts', posts);
+            formData.append('stories', stories);
+            formData.append('likes', likes);
+            formData.append('followers', followers);
+            promises.push(fetch(window.location.href, { method: 'POST', body: formData }).then(function(r) { return r.json(); }));
+        }
+    });
+    Promise.all(promises).then(function() {
+        showToast('All progress synced successfully');
+    }).catch(function() {
+        showToast('Error syncing progress', 'error');
+    });
+}
+
+document.getElementById('brand-upload-file')?.addEventListener('change', function() {
+    var display = document.getElementById('file-name-display');
+    if (display) display.textContent = this.files && this.files[0] ? this.files[0].name : 'No file selected';
+});
+</script>
+{% endblock %}

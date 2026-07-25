@@ -1,142 +1,17 @@
 {% extends "base.html" %}
 
-{% block title %}Pricing | HIFI Marketing & Technologies{% endblock %}
+{% block title %}HIFI Marketing & Technologies | Pricing{% endblock %}
 
 {% block extra_css %}
 <style>
-    /* ===== RESET & BASE ===== */
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    body {
-        font-family: 'Inter', sans-serif;
-        background: #f5f7fa;
-        color: #1a1c26;
-    }
-
-    a {
-        text-decoration: none;
-    }
-
-    .container {
-        max-width: 1280px;
-        margin: 0 auto;
-        padding: 0 24px;
-    }
-
-    /* ===== ANIMATION ===== */
-    @keyframes fadeInUp {
-        0% { opacity: 0; transform: translateY(30px); }
-        100% { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ===== HEADER / NAVBAR ===== */
-    .navbar {
-        background: #ffffff;
-        padding: 16px 0;
-        box-shadow: 0 2px 20px rgba(0,0,0,0.06);
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-    }
-
-    .navbar .container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .logo {
-        font-size: 24px;
-        font-weight: 900;
-        color: #1a1c26;
-    }
-
-    .logo span {
-        background: linear-gradient(135deg, #4a5cf5, #6c7aff);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-
-    .nav-links {
-        display: flex;
-        list-style: none;
-        gap: 32px;
-        align-items: center;
-    }
-
-    .nav-links a {
-        color: #4a5260;
-        font-weight: 600;
-        font-size: 15px;
-        transition: color 0.3s ease;
-    }
-
-    .nav-links a:hover {
-        color: #4a5cf5;
-    }
-
-    .nav-links .active {
-        color: #4a5cf5;
-    }
-
-    .nav-actions {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-    }
-
-    .btn-login {
-        color: #4a5260;
-        font-weight: 600;
-        font-size: 14px;
-        padding: 10px 20px;
-        border-radius: 40px;
-        transition: 0.3s ease;
-    }
-
-    .btn-login:hover {
-        background: #f0f3f8;
-    }
-
-    .btn-getstarted {
-        background: linear-gradient(135deg, #4a5cf5, #6c7aff);
-        color: #fff;
-        padding: 12px 28px;
-        border-radius: 40px;
-        font-weight: 700;
-        font-size: 14px;
-        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        box-shadow: 0 4px 20px rgba(74,92,245,0.25);
-    }
-
-    .btn-getstarted:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 30px rgba(74,92,245,0.35);
-    }
-
-    /* Hamburger */
-    .hamburger {
-        display: none;
-        font-size: 28px;
-        cursor: pointer;
-        color: #1a1c26;
-    }
-
-    /* ===== HERO ===== */
-    .hero {
+    .pricing-hero {
         background: linear-gradient(135deg, #1a1c26 0%, #2a2d3a 100%);
         padding: 80px 0 60px;
         text-align: center;
         position: relative;
         overflow: hidden;
     }
-
-    .hero::before {
+    .pricing-hero::before {
         content: '';
         position: absolute;
         top: -50%;
@@ -146,36 +21,11 @@
         background: radial-gradient(circle, rgba(74,92,245,0.15) 0%, transparent 70%);
         border-radius: 50%;
     }
-
-    .hero .container {
+    .pricing-hero .container {
         position: relative;
         z-index: 1;
     }
-
-    .hero h1 {
-        font-size: 52px;
-        font-weight: 900;
-        color: #fff;
-        letter-spacing: -1.5px;
-        margin-bottom: 16px;
-    }
-
-    .hero h1 span {
-        background: linear-gradient(135deg, #4a5cf5, #6c7aff);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-
-    .hero p {
-        font-size: 20px;
-        color: #b0b8c8;
-        max-width: 600px;
-        margin: 0 auto 32px;
-        line-height: 1.6;
-    }
-
-    .hero-badge {
+    .pricing-hero .hero-badge {
         display: inline-block;
         background: rgba(74,92,245,0.2);
         color: #6c7aff;
@@ -186,39 +36,56 @@
         margin-bottom: 20px;
         border: 1px solid rgba(74,92,245,0.3);
     }
+    .pricing-hero .hero-badge i {
+        margin-right: 6px;
+    }
+    .pricing-hero h1 {
+        font-size: 52px;
+        font-weight: 900;
+        color: #fff;
+        letter-spacing: -1.5px;
+        margin-bottom: 16px;
+    }
+    .pricing-hero h1 span {
+        background: linear-gradient(135deg, #4a5cf5, #6c7aff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .pricing-hero p {
+        font-size: 20px;
+        color: #b0b8c8;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
 
-    /* ===== PRICING SECTION ===== */
     #pricing-section {
         padding: 80px 0;
         background: #f5f7fa;
     }
-
     .page-header {
         text-align: center;
         margin-bottom: 40px;
     }
-
     .page-header h2 {
         font-size: 38px;
         font-weight: 900;
         color: #1a1c26;
         letter-spacing: -1px;
     }
-
     .page-header h2 span {
         background: linear-gradient(135deg, #4a5cf5, #6c7aff);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
     }
-
     .page-header p {
         font-size: 16px;
         color: #4a5260;
         margin-top: 6px;
     }
 
-    /* Tabs Wrapper */
     .tabs-wrapper {
         background: #ffffff;
         border-radius: 20px;
@@ -227,7 +94,6 @@
         margin-bottom: 50px;
         border: 1px solid #e9edf2;
     }
-
     .tabs-inner {
         display: flex;
         justify-content: center;
@@ -237,7 +103,6 @@
         background: #f5f7fa;
         padding: 6px;
     }
-
     .pricing-tab-btn {
         padding: 14px 28px;
         border: none;
@@ -250,43 +115,40 @@
         font-family: 'Inter', sans-serif;
         border-radius: 12px;
     }
-
     .pricing-tab-btn i {
         margin-right: 8px;
     }
-
     .pricing-tab-btn.active {
         background: #ffffff;
         color: #4a5cf5;
         box-shadow: 0 4px 16px rgba(0,0,0,0.06);
     }
-
     .pricing-tab-btn:hover:not(.active) {
         color: #1a1c26;
     }
-
     .pricing-tab-content {
         display: none;
-        animation: fadeInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        animation: fadeInUp 0.6s ease;
     }
-
     .pricing-tab-content.active {
         display: block;
     }
+    @keyframes fadeInUp {
+        0% { opacity: 0; transform: translateY(30px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
 
-    /* Pricing Cards Grid */
     .pricing-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 30px;
     }
-
     .pricing-card {
         background: #ffffff;
         border-radius: 24px;
         padding: 36px 28px 32px;
         text-align: center;
-        transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        transition: all 0.5s ease;
         display: flex;
         flex-direction: column;
         height: 100%;
@@ -294,17 +156,14 @@
         box-shadow: 0 4px 20px rgba(0,0,0,0.04);
         position: relative;
     }
-
     .pricing-card:hover {
         transform: translateY(-8px);
         box-shadow: 0 20px 50px rgba(74,92,245,0.10);
     }
-
     .pricing-card.popular {
         border: 2px solid #4a5cf5;
         box-shadow: 0 8px 30px rgba(74,92,245,0.08);
     }
-
     .popular-badge {
         position: absolute;
         top: -14px;
@@ -321,7 +180,6 @@
         white-space: nowrap;
         box-shadow: 0 4px 16px rgba(74,92,245,0.3);
     }
-
     .card-icon {
         font-size: 40px;
         background: linear-gradient(135deg, #4a5cf5, #6c7aff);
@@ -330,44 +188,37 @@
         background-clip: text;
         margin-bottom: 10px;
     }
-
     .card-title {
         font-size: 22px;
         font-weight: 800;
         color: #1a1c26;
         margin-bottom: 2px;
     }
-
     .card-sub {
         font-size: 13px;
         color: #4a5260;
         margin-bottom: 14px;
     }
-
     .card-price {
         font-size: 34px;
         font-weight: 900;
         color: #4a5cf5;
         margin: 6px 0 2px;
     }
-
     .card-price small {
         font-size: 14px;
         font-weight: 500;
         color: #4a5260;
     }
-
     .card-divider {
         height: 2px;
         background: linear-gradient(90deg, transparent, #4a5cf5, transparent);
         margin: 16px 0;
         opacity: 0.3;
     }
-
     .card-divider.popular-divider {
         opacity: 0.5;
     }
-
     .card-features {
         list-style: none;
         margin: 0 0 22px 0;
@@ -375,7 +226,6 @@
         padding: 0;
         flex: 1;
     }
-
     .card-features li {
         padding: 7px 0;
         font-size: 14px;
@@ -384,13 +234,10 @@
         justify-content: space-between;
         align-items: center;
         border-bottom: 1px solid #f0f3f8;
-        transition: 0.3s ease;
     }
-
     .card-features li .feature-label {
         font-weight: 500;
     }
-
     .card-features li .feature-price {
         font-weight: 700;
         color: #1a1c26;
@@ -399,7 +246,6 @@
         border-radius: 20px;
         font-size: 12px;
     }
-
     .btn-book {
         background: linear-gradient(135deg, #4a5cf5, #6c7aff);
         color: #fff;
@@ -408,7 +254,7 @@
         font-weight: 700;
         font-size: 14px;
         display: inline-block;
-        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        transition: all 0.4s ease;
         border: none;
         box-shadow: 0 4px 20px rgba(74,92,245,0.25);
         margin-top: auto;
@@ -416,28 +262,95 @@
         cursor: pointer;
         text-align: center;
         letter-spacing: 0.3px;
+        text-decoration: none;
     }
-
     .btn-book:hover {
         transform: translateY(-2px);
         box-shadow: 0 8px 30px rgba(74,92,245,0.35);
     }
-
     .btn-book i {
         margin-left: 6px;
         transition: 0.3s ease;
     }
-
     .btn-book:hover i {
         transform: translateX(4px);
     }
 
-    /* View All */
+    .pricing-footer {
+        background: #1a1c26;
+        color: #b0b8c8;
+        padding: 60px 0 30px;
+    }
+    .pricing-footer .footer-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+        gap: 40px;
+        margin-bottom: 40px;
+    }
+    .pricing-footer .footer-brand h3 {
+        color: #fff;
+        font-size: 24px;
+        font-weight: 900;
+        margin-bottom: 12px;
+    }
+    .pricing-footer .footer-brand h3 span {
+        background: linear-gradient(135deg, #4a5cf5, #6c7aff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .pricing-footer .footer-brand p {
+        font-size: 14px;
+        line-height: 1.8;
+        max-width: 300px;
+    }
+    .pricing-footer h4 {
+        color: #fff;
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 16px;
+    }
+    .pricing-footer ul {
+        list-style: none;
+        padding: 0;
+    }
+    .pricing-footer ul li {
+        margin-bottom: 10px;
+    }
+    .pricing-footer ul li a {
+        color: #b0b8c8;
+        font-size: 14px;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    .pricing-footer ul li a:hover {
+        color: #4a5cf5;
+    }
+    .pricing-footer .footer-socials {
+        display: flex;
+        gap: 16px;
+        margin-top: 16px;
+    }
+    .pricing-footer .footer-socials a {
+        color: #b0b8c8;
+        font-size: 20px;
+        transition: color 0.3s;
+    }
+    .pricing-footer .footer-socials a:hover {
+        color: #4a5cf5;
+    }
+    .pricing-footer .footer-bottom {
+        border-top: 1px solid #2a2d3a;
+        padding-top: 24px;
+        text-align: center;
+        font-size: 14px;
+        color: #6a7280;
+    }
+
     .view-all {
         text-align: center;
         margin-top: 50px;
     }
-
     .view-all a {
         display: inline-block;
         padding: 14px 40px;
@@ -446,171 +359,42 @@
         border-radius: 40px;
         font-weight: 700;
         font-size: 15px;
-        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        text-decoration: none;
+        transition: all 0.4s ease;
         box-shadow: 0 4px 20px rgba(74,92,245,0.25);
     }
-
     .view-all a:hover {
         transform: translateY(-3px);
         box-shadow: 0 8px 30px rgba(74,92,245,0.35);
     }
-
     .view-all a i {
         margin-left: 8px;
         transition: 0.3s ease;
     }
-
     .view-all a:hover i {
         transform: translateX(4px);
     }
 
-    /* ===== FOOTER ===== */
-    .footer {
-        background: #1a1c26;
-        color: #b0b8c8;
-        padding: 60px 0 30px;
-    }
-
-    .footer-grid {
-        display: grid;
-        grid-template-columns: 2fr 1fr 1fr 1fr;
-        gap: 40px;
-        margin-bottom: 40px;
-    }
-
-    .footer-brand h3 {
-        color: #fff;
-        font-size: 24px;
-        font-weight: 900;
-        margin-bottom: 12px;
-    }
-
-    .footer-brand h3 span {
-        background: linear-gradient(135deg, #4a5cf5, #6c7aff);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-
-    .footer-brand p {
-        font-size: 14px;
-        line-height: 1.8;
-        max-width: 300px;
-    }
-
-    .footer h4 {
-        color: #fff;
-        font-size: 16px;
-        font-weight: 700;
-        margin-bottom: 16px;
-    }
-
-    .footer ul {
-        list-style: none;
-    }
-
-    .footer ul li {
-        margin-bottom: 10px;
-    }
-
-    .footer ul li a {
-        color: #b0b8c8;
-        font-size: 14px;
-        transition: color 0.3s ease;
-    }
-
-    .footer ul li a:hover {
-        color: #4a5cf5;
-    }
-
-    .footer-bottom {
-        border-top: 1px solid #2a2d3a;
-        padding-top: 24px;
-        text-align: center;
-        font-size: 14px;
-        color: #6a7280;
-    }
-
-    /* ===== RESPONSIVE ===== */
     @media (max-width: 1024px) {
-        .pricing-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .footer-grid {
-            grid-template-columns: 1fr 1fr;
-        }
+        .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+        .pricing-footer .footer-grid { grid-template-columns: 1fr 1fr; }
     }
-
     @media (max-width: 768px) {
-        .hamburger {
-            display: block;
-        }
-
-        .nav-links {
-            display: none;
-            flex-direction: column;
-            position: absolute;
-            top: 70px;
-            left: 0;
-            right: 0;
-            background: #fff;
-            padding: 24px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            gap: 16px;
-        }
-
-        .nav-links.open {
-            display: flex;
-        }
-
-        .nav-actions {
-            display: none;
-        }
-
-        .hero h1 {
-            font-size: 34px;
-        }
-
-        .hero p {
-            font-size: 17px;
-        }
-
-        .pricing-grid {
-            grid-template-columns: 1fr;
-            max-width: 420px;
-            margin: 0 auto;
-        }
-
-        .tabs-inner {
-            flex-direction: column;
-            align-items: stretch;
-        }
-
-        .pricing-tab-btn {
-            text-align: center;
-        }
-
-        .footer-grid {
-            grid-template-columns: 1fr;
-            text-align: center;
-        }
-
-        .footer-brand p {
-            margin: 0 auto;
-        }
-
-        .page-header h2 {
-            font-size: 28px;
-        }
+        .pricing-hero h1 { font-size: 34px; }
+        .pricing-hero p { font-size: 17px; }
+        .pricing-grid { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; }
+        .tabs-inner { flex-direction: column; align-items: stretch; }
+        .pricing-tab-btn { text-align: center; }
+        .pricing-footer .footer-grid { grid-template-columns: 1fr; text-align: center; }
+        .pricing-footer .footer-brand p { margin: 0 auto; }
+        .page-header h2 { font-size: 28px; }
     }
 </style>
 {% endblock %}
 
 {% block content %}
 
-<!-- ===== HERO SECTION ===== -->
-<section class="hero">
+<section class="pricing-hero">
     <div class="container">
         <div class="hero-badge">
             <i class="fas fa-tag"></i> Transparent Pricing
@@ -620,48 +404,28 @@
     </div>
 </section>
 
-<!-- ===== PRICING SECTION ===== -->
 <section id="pricing-section">
     <div class="container">
-
-        <!-- Section Header -->
         <div class="page-header">
             <h2>Our <span>Pricing</span></h2>
             <p>Choose the perfect plan for your business needs</p>
         </div>
 
-        <!-- Tabs -->
         <div class="tabs-wrapper">
             <div class="tabs-inner">
-                <button class="pricing-tab-btn active" data-tab="websites">
-                    <i class="fas fa-globe"></i> Website Design
-                </button>
-                <button class="pricing-tab-btn" data-tab="seo">
-                    <i class="fas fa-chart-line"></i> SEO Services
-                </button>
-                <button class="pricing-tab-btn" data-tab="social">
-                    <i class="fas fa-bullhorn"></i> Social Media
-                </button>
-                <button class="pricing-tab-btn" data-tab="cgi">
-                    <i class="fas fa-cube"></i> CGI &amp; 3D
-                </button>
-                <button class="pricing-tab-btn" data-tab="erp">
-                    <i class="fas fa-users"></i> ERP Systems
-                </button>
-                <button class="pricing-tab-btn" data-tab="creative">
-                    <i class="fas fa-paint-brush"></i> Creative Design
-                </button>
+                <button class="pricing-tab-btn active" data-tab="websites"><i class="fas fa-globe"></i> Website Design</button>
+                <button class="pricing-tab-btn" data-tab="seo"><i class="fas fa-chart-line"></i> SEO Services</button>
+                <button class="pricing-tab-btn" data-tab="social"><i class="fas fa-bullhorn"></i> Social Media</button>
+                <button class="pricing-tab-btn" data-tab="cgi"><i class="fas fa-cube"></i> CGI &amp; 3D</button>
+                <button class="pricing-tab-btn" data-tab="erp"><i class="fas fa-users"></i> ERP Systems</button>
+                <button class="pricing-tab-btn" data-tab="creative"><i class="fas fa-paint-brush"></i> Creative Design</button>
             </div>
         </div>
 
-        <!-- ===== TAB CONTENT ===== -->
         <div>
 
-            <!-- TAB 1: WEBSITE DESIGN -->
             <div id="websites" class="pricing-tab-content active">
                 <div class="pricing-grid">
-
-                    <!-- Card 1 -->
                     <div class="pricing-card">
                         <div class="card-icon"><i class="fas fa-rocket"></i></div>
                         <h3 class="card-title">Express Website</h3>
@@ -677,10 +441,8 @@
                         </ul>
                         <a href="{{ url_for('public.contact') }}" class="btn-book">Book Now <i class="fas fa-arrow-right"></i></a>
                     </div>
-
-                    <!-- Card 2 - Popular -->
                     <div class="pricing-card popular">
-                        <div class="popular-badge">🔥 Most Popular</div>
+                        <div class="popular-badge">Most Popular</div>
                         <div class="card-icon"><i class="fas fa-building"></i></div>
                         <h3 class="card-title">Professional Website</h3>
                         <p class="card-sub">Complete business solution</p>
@@ -697,8 +459,6 @@
                         </ul>
                         <a href="{{ url_for('public.contact') }}" class="btn-book">Book Now <i class="fas fa-arrow-right"></i></a>
                     </div>
-
-                    <!-- Card 3 -->
                     <div class="pricing-card">
                         <div class="card-icon"><i class="fas fa-crown"></i></div>
                         <h3 class="card-title">Premium Website</h3>
@@ -716,11 +476,9 @@
                         </ul>
                         <a href="{{ url_for('public.contact') }}" class="btn-book">Book Now <i class="fas fa-arrow-right"></i></a>
                     </div>
-
                 </div>
             </div>
 
-            <!-- TAB 2: SEO SERVICES -->
             <div id="seo" class="pricing-tab-content">
                 <div class="pricing-grid">
                     <div class="pricing-card">
@@ -737,9 +495,8 @@
                         </ul>
                         <a href="{{ url_for('public.contact') }}" class="btn-book">Book Now <i class="fas fa-arrow-right"></i></a>
                     </div>
-
                     <div class="pricing-card popular">
-                        <div class="popular-badge">🔥 Best Value</div>
+                        <div class="popular-badge">Best Value</div>
                         <div class="card-icon"><i class="fas fa-chart-line"></i></div>
                         <h3 class="card-title">SEO Pro</h3>
                         <p class="card-sub">Per month</p>
@@ -755,7 +512,6 @@
                         </ul>
                         <a href="{{ url_for('public.contact') }}" class="btn-book">Book Now <i class="fas fa-arrow-right"></i></a>
                     </div>
-
                     <div class="pricing-card">
                         <div class="card-icon"><i class="fas fa-trophy"></i></div>
                         <h3 class="card-title">SEO Enterprise</h3>
@@ -775,7 +531,6 @@
                 </div>
             </div>
 
-            <!-- TAB 3: SOCIAL MEDIA -->
             <div id="social" class="pricing-tab-content">
                 <div class="pricing-grid">
                     <div class="pricing-card">
@@ -792,9 +547,8 @@
                         </ul>
                         <a href="{{ url_for('public.contact') }}" class="btn-book">Book Now <i class="fas fa-arrow-right"></i></a>
                     </div>
-
                     <div class="pricing-card popular">
-                        <div class="popular-badge">🔥 Most Popular</div>
+                        <div class="popular-badge">Most Popular</div>
                         <div class="card-icon"><i class="fas fa-bullhorn"></i></div>
                         <h3 class="card-title">Social Pro</h3>
                         <p class="card-sub">Per month</p>
@@ -810,7 +564,6 @@
                         </ul>
                         <a href="{{ url_for('public.contact') }}" class="btn-book">Book Now <i class="fas fa-arrow-right"></i></a>
                     </div>
-
                     <div class="pricing-card">
                         <div class="card-icon"><i class="fas fa-star"></i></div>
                         <h3 class="card-title">Social Enterprise</h3>
@@ -830,7 +583,6 @@
                 </div>
             </div>
 
-            <!-- TAB 4: CGI & 3D -->
             <div id="cgi" class="pricing-tab-content">
                 <div class="pricing-grid">
                     <div class="pricing-card">
@@ -846,9 +598,8 @@
                         </ul>
                         <a href="{{ url_for('public.contact') }}" class="btn-book">Book Now <i class="fas fa-arrow-right"></i></a>
                     </div>
-
                     <div class="pricing-card popular">
-                        <div class="popular-badge">🔥 Most Popular</div>
+                        <div class="popular-badge">Most Popular</div>
                         <div class="card-icon"><i class="fas fa-film"></i></div>
                         <h3 class="card-title">3D Pro</h3>
                         <p class="card-sub">Per project</p>
@@ -863,7 +614,6 @@
                         </ul>
                         <a href="{{ url_for('public.contact') }}" class="btn-book">Book Now <i class="fas fa-arrow-right"></i></a>
                     </div>
-
                     <div class="pricing-card">
                         <div class="card-icon"><i class="fas fa-vr-cardboard"></i></div>
                         <h3 class="card-title">CGI Enterprise</h3>
@@ -882,7 +632,6 @@
                 </div>
             </div>
 
-            <!-- TAB 5: ERP SYSTEMS -->
             <div id="erp" class="pricing-tab-content">
                 <div class="pricing-grid">
                     <div class="pricing-card">
@@ -899,9 +648,8 @@
                         </ul>
                         <a href="{{ url_for('public.contact') }}" class="btn-book">Book Now <i class="fas fa-arrow-right"></i></a>
                     </div>
-
                     <div class="pricing-card popular">
-                        <div class="popular-badge">🔥 Most Popular</div>
+                        <div class="popular-badge">Most Popular</div>
                         <div class="card-icon"><i class="fas fa-users-gear"></i></div>
                         <h3 class="card-title">ERP Pro</h3>
                         <p class="card-sub">Per month</p>
@@ -917,7 +665,6 @@
                         </ul>
                         <a href="{{ url_for('public.contact') }}" class="btn-book">Book Now <i class="fas fa-arrow-right"></i></a>
                     </div>
-
                     <div class="pricing-card">
                         <div class="card-icon"><i class="fas fa-building"></i></div>
                         <h3 class="card-title">ERP Enterprise</h3>
@@ -937,7 +684,6 @@
                 </div>
             </div>
 
-            <!-- TAB 6: CREATIVE DESIGN -->
             <div id="creative" class="pricing-tab-content">
                 <div class="pricing-grid">
                     <div class="pricing-card">
@@ -953,9 +699,8 @@
                         </ul>
                         <a href="{{ url_for('public.contact') }}" class="btn-book">Book Now <i class="fas fa-arrow-right"></i></a>
                     </div>
-
                     <div class="pricing-card popular">
-                        <div class="popular-badge">🔥 Most Popular</div>
+                        <div class="popular-badge">Most Popular</div>
                         <div class="card-icon"><i class="fas fa-pen-fancy"></i></div>
                         <h3 class="card-title">Creative Pro</h3>
                         <p class="card-sub">Per project</p>
@@ -969,7 +714,6 @@
                         </ul>
                         <a href="{{ url_for('public.contact') }}" class="btn-book">Book Now <i class="fas fa-arrow-right"></i></a>
                     </div>
-
                     <div class="pricing-card">
                         <div class="card-icon"><i class="fas fa-star"></i></div>
                         <h3 class="card-title">Creative Enterprise</h3>
@@ -990,21 +734,24 @@
 
         </div>
 
-        <!-- View All -->
         <div class="view-all">
             <a href="{{ url_for('public.pricing') }}">View All Pricing Plans <i class="fas fa-arrow-right"></i></a>
         </div>
-
     </div>
 </section>
 
-<!-- ===== FOOTER ===== -->
-<footer class="footer">
+<footer class="pricing-footer">
     <div class="container">
         <div class="footer-grid">
             <div class="footer-brand">
                 <h3>HIFI <span>Marketing</span></h3>
                 <p>We deliver cutting-edge marketing solutions to help your business grow and succeed in the digital world.</p>
+                <div class="footer-socials">
+                    <a href="https://www.facebook.com/hifimarketingglobal/" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/hifi.marketing/" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/company/hifi-marketing-global" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                </div>
             </div>
             <div>
                 <h4>Company</h4>
@@ -1035,34 +782,23 @@
             </div>
         </div>
         <div class="footer-bottom">
-            &copy; {{ now.year }} HIFI Marketing &amp; Technologies. All rights reserved.
+            &copy; {{ now.year }} HIFI Marketing &amp; Technologies. All rights reserved. Developed by Muhammad Faizan
         </div>
     </div>
 </footer>
 
-<!-- ===== JAVASCRIPT ===== -->
-<script>
-    // ===== HAMBURGER MENU =====
-    function toggleMenu() {
-        const nav = document.getElementById('navLinks');
-        nav.classList.toggle('open');
-    }
+{% endblock %}
 
-    // ===== TABS =====
+{% block extra_js %}
+<script>
     const tabBtns = document.querySelectorAll('.pricing-tab-btn');
     const tabContents = document.querySelectorAll('.pricing-tab-content');
 
     tabBtns.forEach(btn => {
         btn.addEventListener('click', function() {
-            // Remove active from all buttons
             tabBtns.forEach(b => b.classList.remove('active'));
-            // Add active to clicked button
             this.classList.add('active');
-
-            // Hide all contents
             tabContents.forEach(content => content.classList.remove('active'));
-
-            // Show the corresponding content
             const tabId = this.getAttribute('data-tab');
             const targetContent = document.getElementById(tabId);
             if (targetContent) {
@@ -1071,5 +807,4 @@
         });
     });
 </script>
-
 {% endblock %}
