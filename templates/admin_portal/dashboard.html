@@ -5,10 +5,21 @@
     {'label': 'Deliverables', 'icon': 'check-square', 'url': '/admin/portal/dashboard?tab=deliverables', 'active': active_tab == 'deliverables'},
     {'label': 'Tickets', 'icon': 'headset', 'url': '/admin/portal/dashboard?tab=tickets', 'active': active_tab == 'tickets'},
     {'label': 'Verbal', 'icon': 'phone', 'url': '/admin/portal/dashboard?tab=verbal', 'active': active_tab == 'verbal'},
-    {'label': 'Sync', 'icon': 'sync-alt', 'url': '/admin/portal/dashboard?tab=sync', 'active': active_tab == 'sync'}
+    {'label': 'Sync', 'icon': 'sync-alt', 'url': '/admin/portal/dashboard?tab=sync', 'active': active_tab == 'sync'},
+    {'label': 'Billing', 'icon': 'file-invoice-dollar', 'url': '/admin/portal/dashboard?tab=billing', 'active': active_tab == 'billing'}
 ] %}
 
-{% set sidebar_links = nav_links %}
+{% set sidebar_links = [
+    {'label': 'Operations Desk', 'icon': 'tachometer-alt', 'url': '/admin/portal/dashboard?tab=operations', 'active': active_tab == 'operations'},
+    {'label': 'Manage Deliverables', 'icon': 'check-square', 'url': '/admin/portal/dashboard?tab=deliverables', 'active': active_tab == 'deliverables'},
+    {'label': 'Client Tickets & Tasks', 'icon': 'headset', 'url': '/admin/portal/dashboard?tab=tickets', 'active': active_tab == 'tickets'},
+    {'label': 'Client Verbal Requests', 'icon': 'comments', 'url': '/admin/portal/dashboard?tab=verbal', 'active': active_tab == 'verbal'},
+    {'label': 'Progress Counter Sync', 'icon': 'sync-alt', 'url': '/admin/portal/dashboard?tab=sync', 'active': active_tab == 'sync'},
+    {'label': 'Ad Campaigns', 'icon': 'bullhorn', 'url': '/admin/portal/dashboard?tab=operations', 'active': False},
+    {'label': 'Service Packages', 'icon': 'box-open', 'url': '/admin/portal/dashboard?tab=service_packages', 'active': active_tab == 'service_packages'},
+    {'label': 'Billing Management', 'icon': 'file-invoice-dollar', 'url': '/admin/portal/dashboard?tab=billing', 'active': active_tab == 'billing'},
+    {'label': 'Reel Analyzer', 'icon': 'film', 'url': '/admin/portal/dashboard?tab=operations', 'active': False}
+] %}
 
 {% set banner_title = "Admin Portal" %}
 {% set banner_subtitle = "Full system management and oversight" %}
@@ -466,6 +477,89 @@
     <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);text-align:center;font-size:11px;color:var(--text-muted);">
         Changes will be synced instantly to the client dashboard
     </div>
+</div>
+
+{% elif active_tab == 'billing' %}
+
+<div class="card">
+    <div class="card-header">
+        <h3><i class="fas fa-file-invoice-dollar" style="color:var(--primary);"></i> Billing & Invoices</h3>
+        <span class="sub">Manage client invoices and billing records</span>
+    </div>
+    {% if invoices %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Invoice #</th>
+                    <th>Client</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for inv in invoices %}
+                <tr>
+                    <td style="font-weight:700;color:var(--text-primary);">{{ inv.invoice_number if inv.invoice_number else '#' ~ inv.id }}</td>
+                    <td>{{ inv.client_name }}</td>
+                    <td style="font-weight:700;">{{ inv.amount }}</td>
+                    <td><span class="status-badge {% if inv.status == 'paid' or inv.status == 'Paid' %}done{% else %}pending{% endif %}">{{ inv.status if inv.status else 'Pending' }}</span></td>
+                    <td style="color:var(--text-muted);font-size:12px;">{{ inv.created_at.strftime('%b %d, %Y') if inv.created_at else '' }}</td>
+                    <td style="font-size:12px;color:var(--text-secondary);">{{ inv.description if inv.description else '—' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div style="text-align:center;padding:40px;color:var(--text-muted);">
+        <i class="fas fa-file-invoice" style="font-size:36px;display:block;margin-bottom:10px;opacity:0.3;"></i>
+        <p style="font-size:14px;">No invoices yet</p>
+        <p style="font-size:12px;">Invoices will appear here once generated from verbal tasks.</p>
+    </div>
+    {% endif %}
+</div>
+
+{% elif active_tab == 'service_packages' %}
+
+<div class="card">
+    <div class="card-header">
+        <h3><i class="fas fa-box-open" style="color:var(--primary);"></i> Service Packages</h3>
+        <span class="sub">Available client service packages</span>
+    </div>
+    {% if packages %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Package</th>
+                    <th>Price</th>
+                    <th>Posts</th>
+                    <th>Stories</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pkg in packages %}
+                <tr>
+                    <td style="font-weight:700;color:var(--text-primary);">{{ pkg.name }}</td>
+                    <td>{{ pkg.price }}</td>
+                    <td>{{ pkg.posts_limit if pkg.posts_limit else '—' }}</td>
+                    <td>{{ pkg.stories_limit if pkg.stories_limit else '—' }}</td>
+                    <td><span class="status-badge done">{{ pkg.status }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div style="text-align:center;padding:40px;color:var(--text-muted);">
+        <i class="fas fa-box-open" style="font-size:36px;display:block;margin-bottom:10px;opacity:0.3;"></i>
+        <p style="font-size:14px;">No packages available</p>
+    </div>
+    {% endif %}
 </div>
 
 {% endif %}

@@ -161,7 +161,7 @@ def init_career_portal_routes(app):
                 sql += ' AND is_active = 0'
             sql += ' ORDER BY posted_date DESC'
 
-            jobs = db.execute(sql, params).fetchall() if params else db.execute(sql + ' ORDER BY posted_date DESC').fetchall()
+            jobs = db.execute(sql, params).fetchall()
             departments = [r['department'] for r in db.execute('SELECT DISTINCT department FROM jobs WHERE department IS NOT NULL').fetchall()]
         finally:
             db.close()
@@ -371,7 +371,7 @@ def init_career_portal_routes(app):
                 like = f'%{search}%'
                 params.extend([like, like, like])
             sql += ' ORDER BY created_at DESC'
-            messages = db.execute(sql, params).fetchall() if params else db.execute(sql.replace('WHERE 1=1', '') + ' ORDER BY created_at DESC').fetchall()
+            messages = db.execute(sql, params).fetchall()
             unread_count = db.execute("SELECT COUNT(*) as c FROM messages WHERE status = 'unread'").fetchone()['c']
         finally:
             db.close()
@@ -514,7 +514,6 @@ def init_career_portal_routes(app):
         db = get_db()
         ctx = _get_common_context()
         try:
-            total_jobs = db.execute('SELECT COUNT(*) as c FROM jobs').fetchone()['c']
             active_jobs = db.execute('SELECT COUNT(*) as c FROM jobs WHERE is_active = 1').fetchone()['c']
             total_apps = db.execute('SELECT COUNT(*) as c FROM applications').fetchone()['c']
             status_counts = db.execute('SELECT status, COUNT(*) as count FROM applications GROUP BY status').fetchall()
@@ -528,7 +527,6 @@ def init_career_portal_routes(app):
                 FROM applications GROUP BY FORMAT(applied_at, 'yyyy-MM') ORDER BY month
             """).fetchall()
             total_messages = db.execute('SELECT COUNT(*) as c FROM messages').fetchone()['c']
-            unread_messages = db.execute("SELECT COUNT(*) as c FROM messages WHERE status = 'unread'").fetchone()['c']
             total_users = db.execute('SELECT COUNT(*) as c FROM users').fetchone()['c']
             recent_apps = db.execute("""
                 SELECT TOP 5 a.*, j.title as job_title FROM applications a
@@ -537,10 +535,10 @@ def init_career_portal_routes(app):
         finally:
             db.close()
         return render_template('career_admin/reports.html',
-            total_jobs=total_jobs, active_jobs=active_jobs,
+            active_jobs=active_jobs,
             total_apps=total_apps, status_counts=status_counts,
             dept_counts=dept_counts, monthly_apps=monthly_apps,
-            total_messages=total_messages, unread_messages=unread_messages,
+            total_messages=total_messages,
             total_users=total_users, recent_apps=recent_apps,
             active_page='reports',
             **ctx)
@@ -658,3 +656,86 @@ def init_career_portal_routes(app):
             stats=stats_row or {},
             applications=apps,
             recommended_jobs=recommended)
+
+    @app.route('/career/user/jobs')
+    def career_user_jobs():
+        if 'user_id' not in session:
+            return redirect('/login')
+        user_id = session.get('user_id')
+        from flask import request
+        from db import get_db
+        db = get_db()
+        search = request.args.get('search', '').strip()
+        dept_filter = request.args.get('department', '').strip()
+        try:
+            q = "SELECT * FROM jobs WHERE is_active = 1"
+            params = []
+            if search:
+                q += " AND (title LIKE ? OR department LIKE ? OR location LIKE ?)"
+                pattern = f'%{search}%'
+                params.extend([pattern, pattern, pattern])
+            if dept_filter:
+                q += " AND department = ?"
+                params.append(dept_filter)
+            q += " ORDER BY posted_date DESC"
+            jobs = db.execute(q, params).fetchall()
+            departments = db.execute(
+                "SELECT DISTINCT department FROM jobs WHERE is_active = 1 ORDER BY department"
+            ).fetchall()
+        finally:
+            db.close()
+        return render_template('career_user/jobs.html',
+            username=session.get('username', 'User'),
+            user_role=session.get('user_role', 'user'),
+            jobs=jobs,
+            search=search,
+            dept_filter=dept_filter,
+            departments=departments)
+
+    @app.route('/career/user/profile')
+    def career_user_profile():
+        if 'user_id' not in session:
+            return redirect('/login')
+        user_id = session.get('user_id')
+        from db import get_db
+        db = get_db()
+        try:
+            user = db.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
+            applicant = db.execute('SELECT * FROM applicants WHERE user_id = ?', (user_id,)).fetchone()
+        finally:
+            db.close()
+        return render_template('career_user/profile.html',
+            username=session.get('username', 'User'),
+            user_role=session.get('user_role', 'user'),
+            user=user,
+            applicant=applicant or {})
+
+    @app.route('/career/user/settings')
+    def career_user_settings():
+        if 'user_id' not in session:
+            return redirect('/login')
+        return render_template('career_user/settings.html',
+            username=session.get('username', 'User'),
+            user_role=session.get('user_role', 'user'))
+
+    @app.route('/career/job/<int:job_id>')
+    def career_user_job_detail(job_id):
+        if 'user_id' not in session:
+            return redirect('/login')
+        user_id = session.get('user_id')
+        from db import get_db
+        db = get_db()
+        try:
+            job = db.execute('SELECT * FROM jobs WHERE id = ? AND is_active = 1', (job_id,)).fetchone()
+            if not job:
+                return redirect('/career/user/jobs')
+            has_applied = db.execute(
+                'SELECT id FROM applications WHERE user_id = ? AND job_id = ?', (user_id, job_id)
+            ).fetchone() is not None
+        finally:
+            db.close()
+        return render_template('career_user/job-detail.html',
+            username=session.get('username', 'User'),
+            user_role=session.get('user_role', 'user'),
+            job=job,
+            has_applied=has_applied)

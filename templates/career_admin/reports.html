@@ -29,30 +29,38 @@
 </style>
 {% endblock %}
 
-{% block content %}
-<div class="report-grid">
-  <div class="report-card">
-    <h3>Total Jobs</h3>
-    <div class="big-num">{{ total_jobs }}</div>
-    <div class="sub-text">{{ active_jobs }} active</div>
+{% block stats %}
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-icon blue"><i class="fas fa-briefcase"></i></div>
+    <div class="stat-number">{{ total_jobs }}</div>
+    <div class="stat-label">Total Jobs</div>
+    <span class="stat-change up"><i class="fas fa-arrow-up"></i> Active</span>
   </div>
-  <div class="report-card">
-    <h3>Total Applications</h3>
-    <div class="big-num">{{ total_apps }}</div>
-    <div class="sub-text">across all jobs</div>
+  <div class="stat-card">
+    <div class="stat-icon green"><i class="fas fa-file-alt"></i></div>
+    <div class="stat-number">{{ total_apps }}</div>
+    <div class="stat-label">Total Applications</div>
+    <span class="stat-change up"><i class="fas fa-arrow-up"></i> Received</span>
   </div>
-  <div class="report-card">
-    <h3>Messages</h3>
-    <div class="big-num">{{ total_messages }}</div>
-    <div class="sub-text">{{ unread_messages }} unread</div>
+  <div class="stat-card">
+    <div class="stat-icon orange"><i class="fas fa-envelope"></i></div>
+    <div class="stat-number">{{ unread_messages }}</div>
+    <div class="stat-label">Messages</div>
+    <span class="stat-change {% if unread_messages > 0 %}up{% else %}down{% endif %}">
+      {% if unread_messages > 0 %}<i class="fas fa-arrow-up"></i> New{% else %}<i class="fas fa-check"></i> All read{% endif %}
+    </span>
   </div>
-  <div class="report-card">
-    <h3>Total Users</h3>
-    <div class="big-num">{{ total_users }}</div>
-    <div class="sub-text">registered accounts</div>
+  <div class="stat-card">
+    <div class="stat-icon purple"><i class="fas fa-users"></i></div>
+    <div class="stat-number">{{ total_users }}</div>
+    <div class="stat-label">Total Users</div>
+    <span class="stat-change up"><i class="fas fa-arrow-up"></i> Registered</span>
   </div>
 </div>
+{% endblock %}
 
+{% block content %}
 <div class="report-grid">
   <div class="report-card half">
     <h3>Applications by Status</h3>

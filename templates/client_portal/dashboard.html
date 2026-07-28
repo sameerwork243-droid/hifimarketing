@@ -2,16 +2,16 @@
 
 {% set nav_links = [
   {"url": "/client/dashboard", "icon": "tachometer-alt", "label": "Dashboard", "active": active_tab == "dashboard"},
-  {"url": "#", "icon": "credit-card", "label": "Packages", "active": active_tab == "packages"},
-  {"url": "#", "icon": "headset", "label": "Support", "active": active_tab == "support"},
-  {"url": "#", "icon": "file-invoice", "label": "Billing", "active": active_tab == "billing"}
+  {"url": "/client/dashboard", "icon": "credit-card", "label": "Packages", "active": False},
+  {"url": "/client/dashboard", "icon": "headset", "label": "Support", "active": False},
+  {"url": "/client/dashboard", "icon": "file-invoice", "label": "Billing", "active": False}
 ] %}
 
 {% set sidebar_links = [
   {"url": "/client/dashboard", "icon": "tachometer-alt", "label": "Dashboard", "active": active_tab == "dashboard"},
-  {"url": "#", "icon": "credit-card", "label": "Packages", "active": active_tab == "packages"},
-  {"url": "#", "icon": "headset", "label": "Support", "active": active_tab == "support"},
-  {"url": "#", "icon": "file-invoice", "label": "Billing", "active": active_tab == "billing"}
+  {"url": "/client/dashboard", "icon": "credit-card", "label": "Packages", "active": False},
+  {"url": "/client/dashboard", "icon": "headset", "label": "Support", "active": False},
+  {"url": "/client/dashboard", "icon": "file-invoice", "label": "Billing", "active": False}
 ] %}
 
 {% set banner_title = "Welcome, " ~ username ~ "! 👋" %}

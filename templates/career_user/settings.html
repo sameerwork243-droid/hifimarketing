@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings | HIFI Marketing & Technologies</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        :root { --primary: #4a5cf5; --primary-dark: #3a4be0; --bg: #f0f2f5; --card-bg: #ffffff; --text-primary: #1a1c26; --text-secondary: #3d4452; --text-muted: #8a94a0; --border: #e9edf2; --radius: 16px; --shadow: 0 2px 12px rgba(0,0,0,0.04); --transition: 0.3s ease; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text-primary); line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        header { background: rgba(255,255,255,0.98); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 0; position: sticky; top: 0; z-index: 100; }
+        .header-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        .logo { font-size: 24px; font-weight: 900; flex-shrink: 0; }
+        .logo span { color: var(--primary); }
+        .header-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .header-right .nav-link { font-weight: 600; font-size: 14px; color: var(--text-secondary); transition: var(--transition); padding: 6px 12px; border-radius: 8px; }
+        .header-right .nav-link:hover { color: var(--primary); background: #f0f3ff; }
+        .header-right .user-name { font-weight: 600; font-size: 14px; }
+        .header-right .user-name i { color: var(--primary); margin-right: 6px; }
+        .header-right .btn-logout { background: transparent; color: #dc3545; padding: 8px 16px; border-radius: 40px; font-weight: 600; font-size: 13px; border: 1px solid #dc3545; cursor: pointer; transition: var(--transition); }
+        .header-right .btn-logout:hover { background: #dc3545; color: #fff; }
+        .page { max-width: 800px; margin: 0 auto; padding: 30px 24px 60px; }
+        .page-title { font-size: 28px; font-weight: 800; margin-bottom: 24px; }
+        .card { background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--border); padding: 32px; }
+        .card h3 { font-size: 20px; font-weight: 700; margin-bottom: 20px; }
+        .card p { color: var(--text-muted); font-size: 14px; margin-bottom: 8px; }
+        body.dark-mode { --bg: #0b0d10; --card-bg: #14191f; --text-primary: #eaeef2; --text-secondary: #b0b8c5; --text-muted: #6b7a8a; --border: #1e242c; }
+        body.dark-mode header { background: rgba(11,13,16,0.98); border-bottom-color: #1e242c; }
+        body.dark-mode .logo { color: #eaeef2; }
+        body.dark-mode .header-right .user-name { color: #eaeef2; }
+        body.dark-mode .header-right .nav-link { color: #b0b8c5; }
+        body.dark-mode .header-right .nav-link:hover { color: #6c7aff; }
+        @media (max-width: 768px) { .page { padding: 20px 16px 40px; } .card { padding: 20px; } }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-inner">
+            <div class="logo">HIFI <span>Marketing & Technologies</span></div>
+            <div class="header-right">
+                <a href="/career/user/dashboard" class="nav-link"><i class="fas fa-home"></i> Home</a>
+                <a href="/career/user/dashboard" class="nav-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                <a href="/career/user/jobs" class="nav-link"><i class="fas fa-search"></i> Find Jobs</a>
+                <a href="/career/user/profile" class="nav-link"><i class="fas fa-user"></i> Profile</a>
+                <a href="/career/user/settings" class="nav-link"><i class="fas fa-cog"></i> Settings</a>
+                <span class="user-name"><i class="fas fa-user-circle"></i> {{ username }}</span>
+                <a href="/logout" class="btn-logout"><i class="fas fa-sign-out-alt"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <div class="page">
+        <h1 class="page-title"><i class="fas fa-cog" style="color:var(--primary);margin-right:10px;"></i> Settings</h1>
+        <div class="card">
+            <h3>Account Settings</h3>
+            <p>Notification preferences and account management are coming soon.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+        });
+    </script>
+</body>
+</html>
