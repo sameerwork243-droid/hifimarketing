@@ -1,17 +1,17 @@
 {% extends "portal_base.html" %}
 
 {% set nav_links = [
-  {"url": "/client/dashboard", "icon": "tachometer-alt", "label": "Dashboard", "active": active_tab == "dashboard"},
-  {"url": "/client/dashboard", "icon": "credit-card", "label": "Packages", "active": False},
-  {"url": "/client/dashboard", "icon": "headset", "label": "Support", "active": False},
-  {"url": "/client/dashboard", "icon": "file-invoice", "label": "Billing", "active": False}
+  {"url": "/client/dashboard?tab=dashboard", "icon": "tachometer-alt", "label": "Dashboard", "active": active_tab == "dashboard"},
+  {"url": "/client/dashboard?tab=packages", "icon": "credit-card", "label": "Packages", "active": active_tab == "packages"},
+  {"url": "/client/dashboard?tab=support", "icon": "headset", "label": "Support", "active": active_tab == "support"},
+  {"url": "/client/dashboard?tab=billing", "icon": "file-invoice", "label": "Billing", "active": active_tab == "billing"}
 ] %}
 
 {% set sidebar_links = [
-  {"url": "/client/dashboard", "icon": "tachometer-alt", "label": "Dashboard", "active": active_tab == "dashboard"},
-  {"url": "/client/dashboard", "icon": "credit-card", "label": "Packages", "active": False},
-  {"url": "/client/dashboard", "icon": "headset", "label": "Support", "active": False},
-  {"url": "/client/dashboard", "icon": "file-invoice", "label": "Billing", "active": False}
+  {"url": "/client/dashboard?tab=dashboard", "icon": "tachometer-alt", "label": "Dashboard", "active": active_tab == "dashboard"},
+  {"url": "/client/dashboard?tab=packages", "icon": "credit-card", "label": "Packages", "active": active_tab == "packages"},
+  {"url": "/client/dashboard?tab=support", "icon": "headset", "label": "Support", "active": active_tab == "support"},
+  {"url": "/client/dashboard?tab=billing", "icon": "file-invoice", "label": "Billing", "active": active_tab == "billing"}
 ] %}
 
 {% set banner_title = "Welcome, " ~ username ~ "! 👋" %}
@@ -44,6 +44,9 @@
 {% if ads_limit and ads_limit > 0 %}{% set active_services = active_services + 1 %}{% endif %}
 
 {% block content %}
+
+{% if active_tab == 'dashboard' %}
+
 <div class="stats-grid">
   <div class="stat-card">
     <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
@@ -159,6 +162,154 @@
     {% endif %}
   </div>
 </div>
+
+{% elif active_tab == 'packages' %}
+
+<div class="card">
+  <div class="card-header">
+    <h3><i class="fas fa-credit-card" style="color:var(--primary);"></i> My Packages</h3>
+    <span class="sub">Available service packages</span>
+  </div>
+  <div class="package-grid">
+    {% for pkg in packages %}
+    <div class="package-card {% if pkg.id == active_package_id %}active{% endif %}">
+      {% if pkg.id == active_package_id %}<span class="active-badge">Active</span>{% endif %}
+      <div class="pkg-name">{{ pkg.name }}</div>
+      <div class="pkg-price">{{ pkg.currency or 'PKR' }} {{ pkg.price }} <span>/month</span></div>
+      <ul>
+        <li><i class="fas fa-{% if pkg.posts_limit and pkg.posts_limit > 0 %}check-circle" style="color:var(--success){% else %}times-circle" style="color:var(--danger){% endif %}"></i> {{ pkg.posts_limit or 0 }} Posts</li>
+        <li><i class="fas fa-{% if pkg.stories_limit and pkg.stories_limit > 0 %}check-circle" style="color:var(--success){% else %}times-circle" style="color:var(--danger){% endif %}"></i> {{ pkg.stories_limit or 0 }} Stories</li>
+        <li><i class="fas fa-{% if pkg.reels_limit and pkg.reels_limit > 0 %}check-circle" style="color:var(--success){% else %}times-circle" style="color:var(--danger){% endif %}"></i> {{ pkg.reels_limit or 0 }} Reels</li>
+        <li><i class="fas fa-{% if pkg.fb_ig_ads %}check-circle" style="color:var(--success){% else %}times-circle" style="color:var(--danger){% endif %}"></i> FB/IG Ads</li>
+        <li><i class="fas fa-{% if pkg.content_calendar %}check-circle" style="color:var(--success){% else %}times-circle" style="color:var(--danger){% endif %}"></i> Content Calendar</li>
+        <li><i class="fas fa-{% if pkg.monthly_report %}check-circle" style="color:var(--success){% else %}times-circle" style="color:var(--danger){% endif %}"></i> Monthly Report</li>
+      </ul>
+      {% if not active_package or pkg.id != active_package.id %}
+      <button class="btn-switch" onclick="switchPackage({{ pkg.id }})">Switch to this Plan</button>
+      {% else %}
+      <button class="btn-switch active" disabled>Current Plan</button>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h3><i class="fas fa-chart-line" style="color:var(--primary);"></i> Social Progress</h3>
+    <span class="sub">Monthly delivery progress</span>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="number">{{ social_progress.postsCompleted|default(0) }}/{{ posts_limit }}</div>
+      <div class="label">Posts Completed</div>
+    </div>
+    <div class="stat-card">
+      <div class="number">{{ social_progress.storiesCompleted|default(0) }}/{{ stories_limit }}</div>
+      <div class="label">Stories Completed</div>
+    </div>
+    <div class="stat-card">
+      <div class="number">{{ social_progress.reelsCompleted|default(0) }}/{{ reels_limit }}</div>
+      <div class="label">Reels Completed</div>
+    </div>
+    <div class="stat-card">
+      <div class="number">{{ social_progress.adsCompleted|default(0) }}/{{ ads_limit }}</div>
+      <div class="label">Ads Completed</div>
+    </div>
+  </div>
+</div>
+
+{% elif active_tab == 'support' %}
+
+<div class="card">
+  <div class="card-header">
+    <h3><i class="fas fa-headset" style="color:var(--primary);"></i> Support Tickets</h3>
+    <span class="sub">{{ tickets|length }} tickets</span>
+  </div>
+  {% if tickets %}
+    {% for t in tickets %}
+    <div class="task-item">
+      <div class="task-header">
+        <span class="task-title">{{ t.title }}</span>
+        <span class="status-badge {{ t.status|lower }}">{{ t.status }}</span>
+      </div>
+      <div class="task-desc">{{ t.description }}</div>
+      <div class="task-meta">
+        <span><i class="fas fa-tag"></i> {{ t.category }}</span>
+        <span><i class="fas fa-clock"></i> {{ t.created_at }}</span>
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+  <div class="empty-state">
+    <i class="fas fa-ticket-alt"></i>
+    <h4>No tickets yet</h4>
+    <p>Submit a ticket below for support</p>
+  </div>
+  {% endif %}
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h3><i class="fas fa-plus-circle" style="color:var(--primary);"></i> Submit a Ticket</h3>
+  </div>
+  <form onsubmit="submitTicket(event, 'General')" style="display:flex;flex-direction:column;gap:12px;">
+    <div>
+      <label style="font-weight:600;font-size:13px;color:var(--text-secondary);display:block;margin-bottom:4px;">Title</label>
+      <input type="text" id="tk-title" required placeholder="Brief title for your issue" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:10px;font-size:13px;background:var(--bg);color:var(--text-primary);outline:none;">
+    </div>
+    <div>
+      <label style="font-weight:600;font-size:13px;color:var(--text-secondary);display:block;margin-bottom:4px;">Description</label>
+      <textarea id="tk-desc" rows="4" placeholder="Describe your issue in detail" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:10px;font-size:13px;background:var(--bg);color:var(--text-primary);outline:none;resize:vertical;font-family:inherit;"></textarea>
+    </div>
+    <button type="submit" style="padding:10px 24px;background:var(--primary);color:#fff;border:none;border-radius:40px;font-weight:700;font-size:13px;cursor:pointer;align-self:flex-start;transition:var(--transition);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+      <i class="fas fa-paper-plane"></i> Submit Ticket
+    </button>
+  </form>
+</div>
+
+{% elif active_tab == 'billing' %}
+
+<div class="card">
+  <div class="card-header">
+    <h3><i class="fas fa-file-invoice-dollar" style="color:var(--primary);"></i> Billing & Invoices</h3>
+    <span class="sub">{{ invoices|length }} invoices</span>
+  </div>
+  {% if invoices %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Invoice #</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for inv in invoices %}
+        <tr>
+          <td style="font-weight:700;color:var(--text-primary);">{{ inv.invoice_number }}</td>
+          <td>{{ inv.amount }}</td>
+          <td><span class="status-badge {{ inv.status|lower }}">{{ inv.status }}</span></td>
+          <td style="color:var(--text-muted);font-size:12px;">{{ inv.created_at }}</td>
+          <td style="font-size:12px;color:var(--text-secondary);">{{ inv.description if inv.description else '—' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <i class="fas fa-file-invoice" style="font-size:36px;display:block;margin-bottom:10px;opacity:0.3;"></i>
+    <h4>No invoices yet</h4>
+    <p style="font-size:12px;">Invoices will appear here once generated.</p>
+  </div>
+  {% endif %}
+</div>
+
+{% endif %}
 {% endblock %}
 
 {% block extra_js %}
